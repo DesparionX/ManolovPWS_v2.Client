@@ -1,0 +1,2534 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "ManolovPWS_v2.Api | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:7256/"
+    }
+  ],
+  "paths": {
+    "/Account/me": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/name": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNameRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNameRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/email": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/address": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAddressRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAddressRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAddressRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/birth-date": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBirthDateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBirthDateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBirthDateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/gender": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGenderRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGenderRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/phone-number": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePhoneNumberRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePhoneNumberRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePhoneNumberRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/profession": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfessionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfessionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/summary": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSummaryRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSummaryRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/profile-picture": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfilePictureRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfilePictureRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfilePictureRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/experience": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExperienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExperienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExperienceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/education": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEducationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEducationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEducationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/skills": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSkillsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSkillsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSkillsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/languages": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLanguagesRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLanguagesRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLanguagesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/certificates": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificatesRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificatesRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificatesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Account/contacts": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Admin/users/{id}/roles": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Admin/users/{id}/permissions": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPermissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Auth/sign-in": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Auth/sign-out": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/CV": {
+      "get": {
+        "tags": [
+          "CV"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPostRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPostRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}/context": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostContextRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostContextRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostContextRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}/title": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostTitleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostTitleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostTitleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}/thumb": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostThumbRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostThumbRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostThumbRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}/gallery": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostGalleryRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostGalleryRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostGalleryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Posts/{id}/pin": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProjectRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProjectRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/state": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectStateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectStateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectStateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/description": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDescriptionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDescriptionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDescriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/gellery": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectGalleryRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectGalleryRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectGalleryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/thumb": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectThumbRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectThumbRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectThumbRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/github-url": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectGitHubUrlRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectGitHubUrlRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectGitHubUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/live-url": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectLiveUrlRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectLiveUrlRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectLiveUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/name": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectNameRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectNameRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProjectNameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Projects/{id}/stack": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectStackRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectStackRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectStackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddProjectRequest": {
+        "required": [
+          "name",
+          "description",
+          "projectState",
+          "liveUrl",
+          "gitHubUrl",
+          "galleryPictures",
+          "projectStack",
+          "thumbUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "projectState": {
+            "type": "string"
+          },
+          "liveUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gitHubUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "galleryPictures": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "projectStack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "thumbUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "CertificateDto": {
+        "required": [
+          "title",
+          "issuer",
+          "dateObtained",
+          "credentialId",
+          "credentialUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "dateObtained": {
+            "type": "string",
+            "format": "date"
+          },
+          "credentialId": {
+            "type": "string"
+          },
+          "credentialUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeProjectGitHubUrlRequest": {
+        "required": [
+          "newUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "newUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeProjectLiveUrlRequest": {
+        "required": [
+          "newUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "newUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeProjectNameRequest": {
+        "required": [
+          "newName"
+        ],
+        "type": "object",
+        "properties": {
+          "newName": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeProjectStateRequest": {
+        "required": [
+          "newState"
+        ],
+        "type": "object",
+        "properties": {
+          "newState": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeProjectThumbRequest": {
+        "required": [
+          "newThumb"
+        ],
+        "type": "object",
+        "properties": {
+          "newThumb": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactDto": {
+        "required": [
+          "network",
+          "profileName",
+          "fullUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string"
+          },
+          "profileName": {
+            "type": "string"
+          },
+          "fullUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "EducationDto": {
+        "required": [
+          "schoolName",
+          "schoolType",
+          "degree",
+          "fieldOfStudy",
+          "startDate",
+          "endDate"
+        ],
+        "type": "object",
+        "properties": {
+          "schoolName": {
+            "type": "string"
+          },
+          "schoolType": {
+            "type": "string"
+          },
+          "degree": {
+            "type": "string"
+          },
+          "fieldOfStudy": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
+      "JobDto": {
+        "required": [
+          "title",
+          "company",
+          "description",
+          "startDate",
+          "endDate"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
+      "LanguageDto": {
+        "required": [
+          "languageName",
+          "readingLevel",
+          "writingLevel",
+          "speakingLevel",
+          "isNative"
+        ],
+        "type": "object",
+        "properties": {
+          "languageName": {
+            "type": "string"
+          },
+          "readingLevel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "writingLevel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "speakingLevel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "isNative": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewPostRequest": {
+        "required": [
+          "title",
+          "context",
+          "thumb",
+          "gallery",
+          "isPinned"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "thumb": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gallery": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "isPinned": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "required": [
+          "userName",
+          "email",
+          "password",
+          "firstName",
+          "middleName",
+          "profession",
+          "lastName",
+          "gender",
+          "birthDate"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "profession": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "SignInRequest": {
+        "required": [
+          "userNameOrEmail",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "userNameOrEmail": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "SkillDto": {
+        "required": [
+          "name",
+          "level",
+          "type",
+          "category"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateAddressRequest": {
+        "required": [
+          "country",
+          "region",
+          "municipality",
+          "city",
+          "street",
+          "postalCode"
+        ],
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "municipality": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateBirthDateRequest": {
+        "required": [
+          "birthDate"
+        ],
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "UpdateCertificatesRequest": {
+        "required": [
+          "certificates"
+        ],
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateDto"
+            }
+          }
+        }
+      },
+      "UpdateContactsRequest": {
+        "required": [
+          "contacts"
+        ],
+        "type": "object",
+        "properties": {
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDto"
+            }
+          }
+        }
+      },
+      "UpdateEducationRequest": {
+        "required": [
+          "education"
+        ],
+        "type": "object",
+        "properties": {
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            }
+          }
+        }
+      },
+      "UpdateEmailRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateExperienceRequest": {
+        "required": [
+          "experience"
+        ],
+        "type": "object",
+        "properties": {
+          "experience": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobDto"
+            }
+          }
+        }
+      },
+      "UpdateGenderRequest": {
+        "required": [
+          "gender"
+        ],
+        "type": "object",
+        "properties": {
+          "gender": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLanguagesRequest": {
+        "required": [
+          "languages"
+        ],
+        "type": "object",
+        "properties": {
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageDto"
+            }
+          }
+        }
+      },
+      "UpdateNameRequest": {
+        "required": [
+          "firstName",
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "UpdatePhoneNumberRequest": {
+        "required": [
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePostContextRequest": {
+        "required": [
+          "newContext"
+        ],
+        "type": "object",
+        "properties": {
+          "newContext": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePostGalleryRequest": {
+        "required": [
+          "newGallery"
+        ],
+        "type": "object",
+        "properties": {
+          "newGallery": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdatePostThumbRequest": {
+        "required": [
+          "newThumb"
+        ],
+        "type": "object",
+        "properties": {
+          "newThumb": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "UpdatePostTitleRequest": {
+        "required": [
+          "newTitle"
+        ],
+        "type": "object",
+        "properties": {
+          "newTitle": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateProfessionRequest": {
+        "required": [
+          "profession"
+        ],
+        "type": "object",
+        "properties": {
+          "profession": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateProfilePictureRequest": {
+        "required": [
+          "profilePictureUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "profilePictureUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateProjectDescriptionRequest": {
+        "required": [
+          "newDescription"
+        ],
+        "type": "object",
+        "properties": {
+          "newDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateProjectGalleryRequest": {
+        "required": [
+          "newGallery"
+        ],
+        "type": "object",
+        "properties": {
+          "newGallery": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateProjectStackRequest": {
+        "required": [
+          "newStack"
+        ],
+        "type": "object",
+        "properties": {
+          "newStack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateSkillsRequest": {
+        "required": [
+          "skills"
+        ],
+        "type": "object",
+        "properties": {
+          "skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillDto"
+            }
+          }
+        }
+      },
+      "UpdateSummaryRequest": {
+        "required": [
+          "summary"
+        ],
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPermissionRequest": {
+        "required": [
+          "permission"
+        ],
+        "type": "object",
+        "properties": {
+          "permission": {
+            "type": "string"
+          }
+        }
+      },
+      "UserRoleRequest": {
+        "required": [
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter JWT Bearer token",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Account"
+    },
+    {
+      "name": "Admin"
+    },
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "CV"
+    },
+    {
+      "name": "Posts"
+    },
+    {
+      "name": "Projects"
+    },
+    {
+      "name": "Users"
+    }
+  ]
+}
