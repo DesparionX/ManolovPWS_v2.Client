@@ -18,10 +18,12 @@ This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a sepa
 ## Backend Contract
 
 - Backend: .NET API (separate repo, not accessible here)
-- API contract source of truth: `docs-for-claude/openapi.json`
+- API contract source of truth for request/response shapes: `docs-for-claude/openapi.json`
 - Do not invent endpoints or response shapes
 - Ask before changing API assumptions
 - If the spec seems outdated or incomplete, ask — don't guess
+- **Known gap (temporary):** some endpoints (e.g. `GET /Users/{id}`) currently return `200 OK` with no response schema in the spec, because backend actions aren't yet decorated with `[ProducesResponseType]`. This is being fixed incrementally on the backend. Until an endpoint's schema is present, don't assume its shape — ask, or wait for the spec to be regenerated
+- **Auth requirements are NOT taken from the spec.** The `security: Bearer` field in `openapi.json` is a Scalar UI convenience, not a real reflection of `[Authorize]` usage. Endpoint-level auth is set exclusively via what's confirmed in `docs-for-claude/AUTH.md` — see that file's Endpoint Auth Reference before assuming an endpoint is public or protected
 
 ## Auth
 
