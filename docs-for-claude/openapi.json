@@ -17,7 +17,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -599,7 +616,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRolesReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRolesReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRolesReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -716,7 +750,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionsReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionsReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionsReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -880,7 +931,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInApiResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -914,7 +982,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -931,7 +1016,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicCVReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicCVReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicCVReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -948,7 +1050,33 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReadModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReadModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostReadModel"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1010,7 +1138,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1267,7 +1412,33 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectReadModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectReadModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectReadModel"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1329,7 +1500,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1458,7 +1646,7 @@
         ]
       }
     },
-    "/Projects/{id}/gellery": {
+    "/Projects/{id}/gallery": {
       "put": {
         "tags": [
           "Projects"
@@ -1747,7 +1935,33 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompactUserReadModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompactUserReadModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompactUserReadModel"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1774,7 +1988,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateUserReadModel"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1787,6 +2018,22 @@
   },
   "components": {
     "schemas": {
+      "AccessToken": {
+        "required": [
+          "token",
+          "expiresAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expiresAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "AddProjectRequest": {
         "required": [
           "name",
@@ -1924,6 +2171,48 @@
           }
         }
       },
+      "CompactUserReadModel": {
+        "required": [
+          "id",
+          "userName",
+          "email",
+          "firstName",
+          "middleName",
+          "lastName",
+          "profilePictureUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "profilePictureUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "ContactDto": {
         "required": [
           "network",
@@ -1940,6 +2229,46 @@
           },
           "fullUrl": {
             "type": "string"
+          }
+        }
+      },
+      "CVProjectReadModel": {
+        "required": [
+          "name",
+          "description",
+          "state",
+          "liveUrl",
+          "gitHubUrl",
+          "stack"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "liveUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gitHubUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "stack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2083,6 +2412,404 @@
           }
         }
       },
+      "PostReadModel": {
+        "required": [
+          "id",
+          "authorId",
+          "title",
+          "context",
+          "thumb",
+          "gallery",
+          "publishedDate",
+          "updatedDate",
+          "isPinned"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "thumb": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publishedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "isPinned": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PrivateUserReadModel": {
+        "required": [
+          "id",
+          "userName",
+          "email",
+          "firstName",
+          "middleName",
+          "lastName",
+          "country",
+          "region",
+          "municipality",
+          "city",
+          "street",
+          "postalCode",
+          "phoneNumber",
+          "summary",
+          "profession",
+          "profilePictureUrl",
+          "birthDate",
+          "gender",
+          "contacts",
+          "skills",
+          "languages",
+          "experience",
+          "educationHistory",
+          "certificates"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "country": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "region": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "municipality": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "city": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "street": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "postalCode": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "phoneNumber": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "summary": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "profession": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "profilePictureUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDto"
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillDto"
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageDto"
+            }
+          },
+          "experience": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobDto"
+            }
+          },
+          "educationHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            }
+          },
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateDto"
+            }
+          }
+        }
+      },
+      "ProjectReadModel": {
+        "required": [
+          "id",
+          "ownerId",
+          "name",
+          "description",
+          "state",
+          "liveUrl",
+          "gitHubUrl",
+          "uploadedDate",
+          "updatedDate",
+          "gallery",
+          "thumb",
+          "stack"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "liveUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gitHubUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "uploadedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "thumb": {
+            "type": "string"
+          },
+          "stack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PublicAddress": {
+        "required": [
+          "country",
+          "city"
+        ],
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicCVReadModel": {
+        "required": [
+          "profilePictureUrl",
+          "fullName",
+          "gender",
+          "address",
+          "profession",
+          "summary",
+          "workExperience",
+          "projects",
+          "education",
+          "certificates",
+          "skills",
+          "languages",
+          "contacts"
+        ],
+        "type": "object",
+        "properties": {
+          "profilePictureUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "address": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PublicAddress"
+              }
+            ]
+          },
+          "profession": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "workExperience": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobDto"
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CVProjectReadModel"
+            }
+          },
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            }
+          },
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateDto"
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillDto"
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageDto"
+            }
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDto"
+            }
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "required": [
+          "accessToken"
+        ],
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "$ref": "#/components/schemas/AccessToken"
+          }
+        }
+      },
       "RegisterRequest": {
         "required": [
           "userName",
@@ -2127,6 +2854,21 @@
           "birthDate": {
             "type": "string",
             "format": "date"
+          }
+        }
+      },
+      "SignInApiResponse": {
+        "required": [
+          "accessToken",
+          "user"
+        ],
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "$ref": "#/components/schemas/AccessToken"
+          },
+          "user": {
+            "$ref": "#/components/schemas/CompactUserReadModel"
           }
         }
       },
@@ -2487,6 +3229,24 @@
           }
         }
       },
+      "UserPermissionsReadModel": {
+        "required": [
+          "userId",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "UserRoleRequest": {
         "required": [
           "role"
@@ -2495,6 +3255,24 @@
         "properties": {
           "role": {
             "type": "string"
+          }
+        }
+      },
+      "UserRolesReadModel": {
+        "required": [
+          "userId",
+          "roles"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
