@@ -42,6 +42,7 @@ This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a sepa
 
 ## Project Docs
 
+- Folder structure & naming conventions: `docs-for-claude/STRUCTURE.md` — read before creating any new file/folder
 - Per-page requirements/specs: `docs-for-claude/pages/`
 - Auth flow details: `docs-for-claude/AUTH.md`
 - API contract: `docs-for-claude/openapi.json`
