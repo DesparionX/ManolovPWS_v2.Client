@@ -2,6 +2,8 @@
 
 This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a separate .NET API repo (Clean Architecture, modular monolith).
 
+**App model:** single-user (Owner-only). There is exactly one registered account. No public sign-up flow, and the login page is intentionally not linked anywhere public — see `docs-for-claude/AUTH.md` for the resulting auth/redirect conventions this implies.
+
 ## Stack
 
 - React
@@ -22,7 +24,7 @@ This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a sepa
 - Do not invent endpoints or response shapes
 - Ask before changing API assumptions
 - If the spec seems outdated or incomplete, ask — don't guess
-- **Known gap (temporary):** some endpoints (e.g. `GET /Users/{id}`) currently return `200 OK` with no response schema in the spec, because backend actions aren't yet decorated with `[ProducesResponseType]`. This is being fixed incrementally on the backend. Until an endpoint's schema is present, don't assume its shape — ask, or wait for the spec to be regenerated
+- **Known limitation:** `GET /Users/{id}` is documented in the spec as returning only `PrivateUserReadModel`, but actually returns either `PrivateUserReadModel` or `PublicUserReadModel` depending on caller identity (the spec can't express this — see `docs-for-claude/AUTH.md` for the real behavior)
 - **Auth requirements are NOT taken from the spec.** The `security: Bearer` field in `openapi.json` is a Scalar UI convenience, not a real reflection of `[Authorize]` usage. Endpoint-level auth is set exclusively via what's confirmed in `docs-for-claude/AUTH.md` — see that file's Endpoint Auth Reference before assuming an endpoint is public or protected
 
 ## Auth
