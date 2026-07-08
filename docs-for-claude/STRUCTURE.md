@@ -21,6 +21,26 @@ src/
 - `router.tsx` — route definitions (React Router)
 - `providers/` — any additional app-wide context providers, if they grow beyond a couple
 
+## SPA Shell & Layout Architecture
+
+- This is a Single Page Application — one persistent shell, no full page reloads between routes
+- `App.tsx` holds the persistent layout: header/nav + footer live here, wrapping a React Router `<Outlet />` where page content swaps
+- Only the `<Outlet />` content re-renders on navigation — header/nav/footer should not remount per route (avoids re-fetching/re-animating global chrome unnecessarily)
+- Navigation: responsive nav — full nav on `md`+ , collapses to a hamburger/mobile menu below `md` (see `THEME.md` for breakpoint values)
+- Mobile-first responsive approach applies to the shell itself, not just individual pages
+
+## `shared/layout/`
+
+Add this to the `shared/` structure for shell-level components used app-wide:
+
+```
+shared/layout/
+├── Header.tsx
+├── Footer.tsx
+├── Nav.tsx / MobileNav.tsx
+└── Layout.tsx        # Wraps Header + <Outlet /> + Footer, used in App.tsx
+```
+
 ## `pages/`
 
 - One file per route, e.g. `HomePage.tsx`, `BlogPage.tsx`, `ProjectDetailPage.tsx`
