@@ -46,6 +46,7 @@ shared/layout/
 - One file per route, e.g. `HomePage.tsx`, `BlogPage.tsx`, `ProjectDetailPage.tsx`
 - Pages compose feature components together + handle route-level concerns (params, page-level layout)
 - Pages should stay thin — actual logic/UI belongs in the relevant `features/` module, not inlined here
+- **Admin pages live in `pages/admin/`** (kebab-case matches elsewhere: `admin/`, not `Admin/`) — mirrors `docs-for-claude/pages/admin/`. Every page under this folder is Owner-only/protected; the folder boundary itself signals the auth boundary, so route guards should wrap this subtree rather than being applied ad hoc per page
 
 ## `features/<feature-name>/`
 
