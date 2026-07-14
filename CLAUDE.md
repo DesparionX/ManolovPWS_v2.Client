@@ -44,6 +44,8 @@ This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a sepa
 
 - Folder structure & naming conventions: `docs-for-claude/STRUCTURE.md` — read before creating any new file/folder
 - Visual design system (colors, typography, responsive breakpoints): `docs-for-claude/THEME.md` — read before styling any component
+- Image upload subsystem (Cloudinary, no backend file service): `docs-for-claude/FILE-UPLOAD.md` — read before touching any image upload feature (profile picture, post/project thumb/gallery)
+- API client, TanStack Query setup, and global error/success notification pattern: `docs-for-claude/API-CLIENT.md` — read before writing any data-fetching code
 - Per-page requirements/specs: `docs-for-claude/pages/`
 - Auth flow details: `docs-for-claude/AUTH.md`
 - API contract: `docs-for-claude/openapi.json`
