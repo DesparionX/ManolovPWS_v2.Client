@@ -2,10 +2,10 @@ import { Container } from "../components/Container";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border-default">
+    <footer className="border-t border-border-default bg-bg-base/90">
       <Container>
-        <div className="flex flex-col items-center justify-between gap-2 py-6 text-sm text-text-secondary md:flex-row">
-          <span>&copy; {new Date().getFullYear()} Manolov</span>
+        <div className="flex justify-center py-6 text-sm text-text-primary">
+          <span>by Manolov - {new Date().getFullYear()}</span>
         </div>
       </Container>
     </footer>

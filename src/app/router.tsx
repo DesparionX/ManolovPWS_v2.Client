@@ -20,10 +20,10 @@ export const router = createBrowserRouter([
           { path: 'projects', element: <ProjectsPage /> },
           { path: 'cv', element: <CVPage /> },
           { path: 'contact', element: <ContactPage /> },
+          { path: 'admin/auth', element: <SignInPage /> },
           { path: 'admin', element: <RequireAuth /> },
         ],
       },
-      { path: 'admin/auth', element: <SignInPage /> },
     ],
   },
 ])

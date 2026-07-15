@@ -70,7 +70,7 @@ export const authStore = {
 
 ## Design / Visual Notes
 
-- Simple, centered login card — no navbar/footer clutter competing for attention (or minimal chrome), styled with `THEME.md`'s tokens once finalized
+- **Confirmed:** the outer Header/Footer chrome (`STRUCTURE.md`'s SPA shell) IS shown on this page — not the "no navbar/footer" option originally floated here. Simple, centered login card in the remaining space between them, styled with `THEME.md`'s tokens.
 - Floating label / border styling can reuse the same field conventions established in `admin/profile.md` for visual consistency across the app, even though this page isn't part of the admin panel functionally
 - Eye icon: clear visual feedback for the press-and-hold state (e.g. icon swaps between open/closed eye) so it's obvious the reveal is momentary, not a toggle
 
