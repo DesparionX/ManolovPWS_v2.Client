@@ -40,6 +40,13 @@ This is the React frontend for ManolovPWS_v2, a portfolio app. Backend is a sepa
 - Do not add Redux
 - Ask before adding large libraries, changing state management approach, or changing routing strategy
 
+## Environment Variables
+
+- All env vars are prefixed `VITE_` (Vite's requirement for client-exposed variables) — see `.env.example` at the repo root for the current full list
+- `.env.local` holds real local values, gitignored, never committed. `.env.example` is committed and kept in sync whenever a new variable is introduced — update it alongside any code that adds a new env var.
+- **`VITE_`-prefixed variables are bundled into shipped client JS and are visible to anyone via dev tools — this is not a secret store.** Never put a genuine API secret behind a `VITE_` prefix; only values safe to be public (base URLs, unsigned Cloudinary preset names, etc.) belong here.
+- On Vercel/Netlify, the same variable names are set via the platform's dashboard (not a committed file) — values differ per environment (e.g. local API URL vs. deployed API URL)
+
 ## Project Docs
 
 - Folder structure & naming conventions: `docs-for-claude/STRUCTURE.md` — read before creating any new file/folder
