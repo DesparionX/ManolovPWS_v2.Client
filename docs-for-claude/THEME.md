@@ -18,9 +18,9 @@ Based on the glassmorphism/blurred-card direction already set in `pages/home.md`
 | `border-hover` / `border-accent` | accent color, see below               | Hover/pinned border colorization                  |
 | `text-primary`                   | `#f2f2f5`                             | Main text                                         |
 | `text-secondary`                 | `#9a9aa8`                             | Dates, meta info, secondary text                  |
-| `accent`                         | **TBD — needs your input**            | Hover borders, links, buttons, pinned-post border |
+| `accent`                         | `#22D3EE` (electric cyan)             | Hover borders, links, buttons, pinned-post border |
 
-**I need an actual accent color from you** — everything above is a reasonable dark-neutral base, but the accent (the color borders shift to on hover, button colors, etc.) is a personal brand choice I shouldn't guess. Something like electric blue, violet, teal, amber — whatever fits how you want the portfolio to feel.
+**Chosen:** electric cyan. Reads as futuristic/HUD-like on the near-black background without being a screen-burning neon, distinct from both the old site's red/orange identity and the generic corporate-blue look most dev portfolios default to — fits the "professional, futuristic, developer/gamer" brief directly.
 
 ## Typography
 
@@ -57,7 +57,6 @@ Using Tailwind's default breakpoints (no custom values):
 
 ## Open Questions / Ask Before Assuming
 
-- **Accent color** — needed before any hover/interactive states can be styled correctly
 - **Font choice** — defaulting to Inter-style sans-serif unless you specify otherwise
 - **Border radius personality** — sharp/minimal vs soft/rounded
 - **Max content width** for feed-style pages
