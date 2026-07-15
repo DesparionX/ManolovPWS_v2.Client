@@ -1,3 +1,5 @@
+import { authStore } from "../auth/authStore";
+
 export class ApiError extends Error {
   status: number;
   errors: { code: string; message: string }[];
@@ -17,19 +19,9 @@ const CREDENTIALED_PATHS = [
   "/Auth/sign-out",
 ];
 
-let accessToken: string | null = null;
-
-export function getAccessToken() {
-  return accessToken;
-}
-
-export function setAccessToken(token: string | null) {
-  accessToken = token;
-}
-
 let refreshPromise: Promise<boolean> | null = null;
 
-async function refreshAccessToken(): Promise<boolean> {
+export async function refreshAccessToken(): Promise<boolean> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       try {
@@ -38,14 +30,14 @@ async function refreshAccessToken(): Promise<boolean> {
           credentials: "include",
         });
         if (!response.ok) {
-          setAccessToken(null);
+          authStore.clear();
           return false;
         }
         const data = await response.json();
-        setAccessToken(data.token);
+        authStore.setToken(data.accessToken.token, data.accessToken.expiresAtUtc);
         return true;
       } catch {
-        setAccessToken(null);
+        authStore.clear();
         return false;
       } finally {
         refreshPromise = null;
@@ -83,6 +75,7 @@ export async function apiFetch<T>(
   if (init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
+  const accessToken = authStore.getToken();
   if (accessToken) {
     headers.set("Authorization", `Bearer ${accessToken}`);
   }

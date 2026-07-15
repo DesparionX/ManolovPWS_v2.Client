@@ -42,14 +42,16 @@ Conventions for authentication/authorization on the frontend. Read this before t
 - Use `credentials: "include"` for: sign-in, refresh-token, and sign-out requests (so the HttpOnly cookie is sent/received)
 - Send the access token as a `Bearer` token in the `Authorization` header for all protected requests
 - Centralize this logic (e.g. an API client wrapper or TanStack Query default fetcher) — don't repeat auth header logic per-request
-- `POST /Auth/refresh-token` response contains a new `AccessToken`:
+- `POST /Auth/refresh-token` response (`RefreshTokenResponse`, confirmed against `openapi.json`):
   ```ts
   {
-    token: string;
-    expiresAtUtc: string;
-  } // ISO date-time — same shape as sign-in's accessToken
+    accessToken: {
+      token: string;
+      expiresAtUtc: string; // ISO date-time
+    };
+  }
   ```
-  Replace the in-memory access token with this on every successful refresh
+  Wrapped under `accessToken`, same nesting as sign-in's response — not flat. Replace the in-memory access token with `accessToken.token`/`accessToken.expiresAtUtc` on every successful refresh.
 
 ## Refresh Flow
 

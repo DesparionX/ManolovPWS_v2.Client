@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom'
 import { ErrorModal } from '../shared/notifications/ErrorModal'
 import { Toast } from '../shared/notifications/Toast'
 
@@ -6,6 +7,7 @@ function App() {
     <>
       <ErrorModal />
       <Toast />
+      <Outlet />
     </>
   )
 }

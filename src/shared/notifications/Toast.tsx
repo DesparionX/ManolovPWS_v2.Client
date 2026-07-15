@@ -20,8 +20,11 @@ export function Toast() {
   if (!state.toast) return null;
 
   return (
-    <div role="status">
-      <p>{state.toast}</p>
+    <div
+      role="status"
+      className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-border-default bg-bg-surface/80 px-4 py-3 text-sm text-text-primary shadow-xl backdrop-blur-md"
+    >
+      {state.toast}
     </div>
   );
 }
