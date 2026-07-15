@@ -15,9 +15,11 @@ Owner-only management area. Persistent inner navigation on the left, page conten
 
 All are real, bookmarkable, protected nested routes — not client-side tab state.
 
+**Exception: `/admin/auth` is NOT part of this protected subtree**, despite sharing the `/admin` URL prefix. It's the sign-in page (own doc: `../sign-in.md`) and must be reachable while _unauthenticated_ — the opposite requirement of everything else under `/admin`. It's defined as a standalone sibling route in the router config, not nested inside this protected `AdminLayout` route object. Don't assume every `/admin/*` path is guarded — check `sign-in.md` for this one exception.
+
 ## Protection
 
-- The entire `/admin` subtree is wrapped by a route guard requiring a valid access token in memory (per `AUTH.md`)
+- The entire `/admin` subtree **except `/admin/auth`** (see Routes exception above) is wrapped by a route guard requiring a valid access token in memory (per `AUTH.md`)
 - Guard should attempt a silent refresh (per `AUTH.md`'s Refresh Flow) before deciding the session is invalid — avoids bouncing a genuinely-valid Owner session just because a hard page refresh cleared the in-memory token
 - On failure (no valid session, refresh also fails): redirect to the **home page**, never to a login prompt or error page — consistent with `AUTH.md`'s Failure / Redirect Behavior (the login route stays secret even from failed admin access attempts)
 
@@ -34,10 +36,11 @@ All are real, bookmarkable, protected nested routes — not client-side tab stat
 
 ## Child Pages
 
-- `docs-for-claude/pages/admin/profile.md` — not yet created
-- `docs-for-claude/pages/admin/posts.md` — not yet created (simple management table, per your description)
-- `docs-for-claude/pages/admin/projects.md` — not yet created (simple management table)
+- `docs-for-claude/pages/admin/profile.md`
+- `docs-for-claude/pages/admin/posts.md`
+- `docs-for-claude/pages/admin/projects.md`
 - `docs-for-claude/pages/admin/inbox.md` — not yet created, blocked on Contact module
+- `docs-for-claude/pages/sign-in.md` — not a child of this layout (see Routes exception above), listed for cross-reference since it's the entry point into `/admin`
 
 ## Open Questions / Ask Before Assuming
 
