@@ -41,7 +41,7 @@ shared/layout/
 └── Layout.tsx        # Wraps Header + <Outlet /> + Footer, used in App.tsx
 ```
 
-- The logo inside `Header.tsx` doubles as the hidden sign-in trigger — double-click (desktop) / double-tap (mobile, custom-detected) navigates to `/admin/auth`. No hover cursor change (must not look interactive). Full details in `docs-for-claude/pages/sign-in.md`.
+- The logo inside `Header.tsx` doubles as the hidden admin entry trigger — double-click (desktop) / double-tap (mobile, custom-detected) navigates to `/admin/auth` if signed out, or straight to `/admin` if a session is already active. No hover cursor change (must not look interactive). Full details in `docs-for-claude/pages/sign-in.md`.
 
 ## `pages/`
 

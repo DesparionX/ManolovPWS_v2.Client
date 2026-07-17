@@ -18,8 +18,9 @@ Hidden entry point for the Owner to sign in. Never linked anywhere in the visibl
 - On success:
   1. Store `accessToken` in the in-memory auth store (see Auth State Store dependency below)
   2. The refresh-token HttpOnly cookie is set automatically by the backend's `Set-Cookie` header — nothing for the frontend to handle explicitly (per `AUTH.md`)
-  3. Navigate to `/admin`
-- On failure: surfaced via the existing global `ApiError` modal (per `API-CLIENT.md`) — no bespoke inline error UI needed, this reuses infrastructure that already exists
+  3. Navigate to `/admin` — handled by the same reactive effect as the Guest-only guard below (not a separate explicit `navigate()` call in the mutation's `onSuccess`), see Functionality & Interactions for why that unification matters
+- **On failure: NOT the global `ApiError` modal.** Confirmed after real-world testing surfaced two problems with that original plan: (1) a modal reads as an "informational" popup, not a validation error, and needs to be dismissed rather than just read; (2) an unrelated bug in `httpClient.ts` (401 from sign-in was being misread as "session expired," triggering a silent-refresh attempt + the redirect-home behavior meant for protected routes — see `AUTH.md`'s Refresh Flow exception) meant the modal was torn out from under the Owner by a page redirect after about a second, before it could even be read. Fixed by: (a) excluding `/Auth/sign-in` from the refresh/redirect flow entirely, and (b) opting this mutation out of the global modal via `meta: { suppressGlobalError: true }` (per `API-CLIENT.md`), rendering the error as plain text in `text-danger` directly above the Sign In button instead. The error stays on this page until the Owner corrects the input and resubmits — no redirect, no auto-dismiss.
+- **Error message content:** whatever `ApiError.message` resolves to from the response body — normally the backend's own validation message (e.g. "Invalid username or password"). If the backend returns an unhandled-exception response instead of a proper validation error, `httpClient.ts`'s `parseErrors` now falls back through ASP.NET's `ProblemDetails` `detail`/`title` fields rather than always showing a generic "Something went wrong" — see `API-CLIENT.md`.
 
 ## Dependency: Auth State Store (not yet formally documented — defining minimally here)
 
@@ -59,14 +60,16 @@ export const authStore = {
 
 ## Functionality & Interactions
 
-- **Guest-only guard:** if `authStore.isAuthenticated()` is already true on mount, redirect immediately to home — don't render the form at all, even briefly. This is the mirror image of the `/admin` guard: that one requires auth, this one requires the _absence_ of it.
-- **Trigger (lives in the shared Header/Logo component, not this page):** double-click (desktop) or double-tap (mobile) on the navbar logo navigates to `/admin/auth`. No cursor pointer style change on hover — the logo should look and behave like a static image to a casual visitor, not an interactive element.
+- **Guest-only guard, redirects to `/admin` (not home):** a single `useEffect` watching `authStore.isAuthenticated()` (via `useSyncExternalStore`) redirects to `/admin` whenever it's true — don't render the form at all in that case, even briefly. This is the mirror image of the `/admin` guard: that one requires auth, this one requires the _absence_ of it while rendering the form, but redirects to the same place once auth is present.
+  - **This same effect is also what sends the Owner to `/admin` right after a successful sign-in** — `onSuccess` only stores the token (`authStore.setToken`); it deliberately does **not** also call `navigate()` itself. Earlier it did, and that caused a real bug: `authStore.setToken` flips `isAuthenticated` to `true`, which independently re-triggered this same guard effect — so two `navigate()` calls raced (`onSuccess`'s explicit one → `/admin`, the guard's reactive one → `/` as it was written then), and whichever ran last won, which in practice bounced the Owner to the home page instead of `/admin`. Unifying both cases into the one effect, targeting `/admin`, means there's only ever one navigation decision — the race is gone because both triggers now agree on the destination.
+- **Trigger (lives in the shared Header/Logo component, not this page):** double-click (desktop) or double-tap (mobile) on the navbar logo. **Destination depends on session state:** already authenticated → straight to `/admin` (skips the login form entirely, no flash of it); otherwise → `/admin/auth`. No cursor pointer style change on hover — the logo should look and behave like a static image to a casual visitor, not an interactive element.
   - Desktop: native `onDoubleClick` handler
   - Mobile: no native double-tap event exists in browsers — implement manually by tracking tap timestamps (two `touchend` events within a short window, e.g. 300ms, counts as a double-tap)
 - **Form fields:**
-  - Username/Email — single text input (backend accepts either), required
-  - Password — masked by default; an eye icon reveals the value **only while actively pressed/held** (not a toggle): `onMouseDown`/`onTouchStart` switches the input to plain text, `onMouseUp`/`onMouseLeave`/`onTouchEnd`/`onTouchCancel` masks it again
-- **Submit button:** labeled "Sign In", triggers the sign-in mutation
+  - Username/Email — single text input (backend accepts either), required, **minimum 5 characters**
+  - Password — masked by default; an eye icon reveals the value **only while actively pressed/held** (not a toggle): `onMouseDown`/`onTouchStart` switches the input to plain text, `onMouseUp`/`onMouseLeave`/`onTouchEnd`/`onTouchCancel` masks it again. Required, **minimum 9 characters** — no other complexity rules (no forced uppercase/number/symbol)
+- **Validation timing:** on submit (button press), not live/on-change while typing — standard react-hook-form + Zod `onSubmit` mode, no extra config needed
+- **Submit button:** labeled "Sign In", triggers the sign-in mutation. Shows a spinner in place of the label while the request is pending, per `THEME.md`'s Buttons & Loading State convention
 
 ## Design / Visual Notes
 
@@ -77,8 +80,8 @@ export const authStore = {
 ## Edge Cases
 
 - Double-tap on mobile conflicting with the browser's default double-tap-to-zoom gesture on some elements — may need `touch-action: manipulation` CSS on the logo to suppress that default behavior
-- Submitting with empty fields — basic required-field validation, no need for password complexity rules here (this is login, not registration/account creation)
-- Failed sign-in (wrong credentials) — relies entirely on the existing global error modal; no special-casing needed beyond what `API-CLIENT.md` already provides
+- Submitting with empty/too-short fields — client-side Zod validation catches this before any request fires (userNameOrEmail < 5 chars, password < 9 chars), errors shown per-field via `FloatingInput`'s error slot, same as any other field error — no password complexity rules beyond length (this is login, not registration/account creation)
+- Failed sign-in (wrong credentials) — inline `text-danger` message above the Sign In button (see Data / API above), NOT the global modal. Page does not redirect on this failure — the Owner stays on `/admin/auth` to correct and resubmit.
 
 ## Open Questions / Ask Before Assuming
 

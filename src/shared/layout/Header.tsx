@@ -4,6 +4,7 @@ import { authStore } from "../auth/authStore";
 import { useSignOut } from "../../features/auth";
 import { Nav } from "./Nav";
 import { MobileNav } from "./MobileNav";
+import { Button } from "../components/Button";
 import logo from "../../assets/logo.png";
 
 const DOUBLE_TAP_WINDOW_MS = 300;
@@ -17,11 +18,15 @@ export function Header() {
   const signOut = useSignOut();
   const lastTapRef = useRef(0);
 
+  function goToAdminEntry() {
+    navigate(isAuthenticated ? "/admin" : "/admin/auth");
+  }
+
   function handleLogoTouchEnd() {
     const now = Date.now();
     if (now - lastTapRef.current < DOUBLE_TAP_WINDOW_MS) {
       lastTapRef.current = 0;
-      navigate("/admin/auth");
+      goToAdminEntry();
     } else {
       lastTapRef.current = now;
     }
@@ -40,7 +45,7 @@ export function Header() {
           src={logo}
           alt="Manolov"
           draggable={false}
-          onDoubleClick={() => navigate("/admin/auth")}
+          onDoubleClick={goToAdminEntry}
           onTouchEnd={handleLogoTouchEnd}
           style={{ touchAction: "manipulation" }}
           className="h-10 w-auto select-none object-contain"
@@ -49,12 +54,12 @@ export function Header() {
         <div className="flex items-center gap-4">
           <Nav />
           {isAuthenticated && (
-            <button
+            <Button
               type="button"
               aria-label="Sign out"
               onClick={handleSignOut}
-              disabled={signOut.isPending}
-              className="rounded-lg p-2 text-text-secondary transition-colors hover:text-accent disabled:opacity-50"
+              isLoading={signOut.isPending}
+              className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-accent"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -69,7 +74,7 @@ export function Header() {
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
-            </button>
+            </Button>
           )}
           <MobileNav />
         </div>

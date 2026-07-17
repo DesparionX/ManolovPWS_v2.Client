@@ -22,7 +22,7 @@ export function Toast() {
   return (
     <div
       role="status"
-      className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-border-default bg-bg-surface/80 px-4 py-3 text-sm text-text-primary shadow-xl backdrop-blur-md"
+      className="fixed right-4 bottom-4 z-50 rounded-xl border border-success/40 bg-bg-surface/90 px-6 py-4 text-base text-success shadow-xl backdrop-blur-md"
     >
       {state.toast}
     </div>

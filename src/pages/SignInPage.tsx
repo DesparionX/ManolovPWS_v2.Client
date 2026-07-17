@@ -7,10 +7,12 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 import { authStore } from "../shared/auth/authStore";
 import { useSignIn } from "../features/auth";
 import { FloatingInput } from "../shared/components/FloatingInput";
+import { Button } from "../shared/components/Button";
+import { ApiError } from "../shared/api/httpClient";
 
 const signInSchema = z.object({
-  userNameOrEmail: z.string().min(1, "Required"),
-  password: z.string().min(1, "Required"),
+  userNameOrEmail: z.string().min(5, "Must be at least 5 characters"),
+  password: z.string().min(9, "Must be at least 9 characters"),
 });
 
 type SignInFormValues = z.infer<typeof signInSchema>;
@@ -34,7 +36,7 @@ export function SignInPage() {
   });
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/", { replace: true });
+    if (isAuthenticated) navigate("/admin", { replace: true });
   }, [isAuthenticated, navigate]);
 
   if (isAuthenticated) return null;
@@ -43,7 +45,6 @@ export function SignInPage() {
     signIn.mutate(values, {
       onSuccess: (data) => {
         authStore.setToken(data.accessToken.token, data.accessToken.expiresAtUtc);
-        navigate("/admin");
       },
     });
   }
@@ -73,7 +74,7 @@ export function SignInPage() {
                 <button
                   type="button"
                   aria-label={passwordRevealed ? "Hide password" : "Show password"}
-                  className="rounded-md p-1 text-text-secondary transition-colors hover:text-accent"
+                  className="rounded-md p-1 text-text-secondary transition-colors duration-300 hover:text-accent"
                   style={{ touchAction: "manipulation" }}
                   onMouseDown={() => setPasswordRevealed(true)}
                   onMouseUp={() => setPasswordRevealed(false)}
@@ -92,13 +93,20 @@ export function SignInPage() {
               {...register("password")}
             />
           </div>
-          <button
-            type="submit"
-            disabled={signIn.isPending}
-            className="mx-auto mt-9 block w-1/2 rounded-lg bg-accent-dark px-4 py-2 font-medium text-text-primary transition-colors duration-300 ease-out hover:bg-accent-dark/80 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Sign In
-          </button>
+          <div className="mt-9">
+            {signIn.error instanceof ApiError && (
+              <p className="mb-3 text-center text-sm text-danger">
+                {signIn.error.message}
+              </p>
+            )}
+            <Button
+              type="submit"
+              isLoading={signIn.isPending}
+              className="mx-auto w-1/2 rounded-lg bg-accent-dark px-4 py-2 font-medium text-text-primary transition-colors duration-300 ease-out hover:bg-accent-dark/80"
+            >
+              Sign In
+            </Button>
+          </div>
         </form>
       </div>
     </div>

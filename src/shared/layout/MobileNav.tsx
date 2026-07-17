@@ -15,17 +15,17 @@ export function MobileNav() {
         className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-lg border border-border-default"
       >
         <span
-          className={`h-0.5 w-5 bg-text-primary transition-transform ${
+          className={`h-0.5 w-5 bg-text-primary transition-transform duration-300 ${
             open ? "translate-y-2 rotate-45" : ""
           }`}
         />
         <span
-          className={`h-0.5 w-5 bg-text-primary transition-opacity ${
+          className={`h-0.5 w-5 bg-text-primary transition-opacity duration-300 ${
             open ? "opacity-0" : ""
           }`}
         />
         <span
-          className={`h-0.5 w-5 bg-text-primary transition-transform ${
+          className={`h-0.5 w-5 bg-text-primary transition-transform duration-300 ${
             open ? "-translate-y-2 -rotate-45" : ""
           }`}
         />
@@ -40,7 +40,7 @@ export function MobileNav() {
               end={link.to === "/"}
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
-                `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                `rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-300 ${
                   isActive
                     ? "text-accent"
                     : "text-text-secondary hover:text-text-primary"

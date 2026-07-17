@@ -8,7 +8,7 @@ Public landing page — displays all posts, feed-style. Pinned posts appear on t
 
 - `GET /Posts` (public) — fetched once on page load, returns the full `PostReadModel[]` array (no pagination currently — see Functionality notes below)
 - Client-side split into two lists based on the `isPinned` boolean field: pinned posts first, then the rest
-- `GET /Posts/{id}` (public) — called fresh when "View post" is clicked, even though the list already has the full `PostReadModel` for that post. This is deliberate: the detail route must work as a standalone shareable link (someone opening a shared post URL directly won't have the list loaded), so it always fetches independently rather than relying on in-memory list data.
+- `GET /Posts/{id}` (public) — called fresh when "View post" is clicked, even though the list already has the full `PostReadModel` for that post. This is deliberate: the detail route must work as a standalone shareable link (someone opening a shared post URL directly won't have the list loaded), so it always fetches independently rather than relying on in-memory list data. Full detail page spec: `pages/POST-DETAIL.md`.
 
 `PostReadModel` shape (confirmed via `openapi.json`):
 
@@ -17,7 +17,7 @@ interface PostReadModel {
   id: string;
   authorId: string;
   title: string;
-  context: string; // plain text for now — see Future Considerations
+  context: string; // HTML from the admin Post Editor's TipTap rich-text field — see Future Considerations
   thumb: string | null;
   gallery: string[];
   publishedDate: string; // date-only
@@ -49,8 +49,9 @@ interface PostReadModel {
   - Thumb: an illustration of a confused/wondering person
   - Context: "We have no posts yet or DB is dead."
   - No "View post" button on this placeholder (it isn't a real post)
+  - **Placeholder decision:** no illustration asset exists yet in `src/assets/` for "confused/wondering person" — using lucide-react's `Frown` icon as a stand-in until a real illustration is supplied. Swap it out once one exists; flag if you'd rather commission/pick the illustration now instead.
 
 ## Future Considerations (not building now, but affects current decisions)
 
-- `context` will eventually be rich text (bold, line breaks, etc. via an editor) instead of plain text. Decided now: use CSS line-clamp for the 3-line preview (not substring/character counting) specifically so this transition doesn't require reworking the truncation logic later.
+- **Update:** `context` is now confirmed as TipTap-authored HTML (built alongside the admin Post Editor), not plain text — the note above about "eventually rich text" already happened. The 3-line card preview strips tags to plain text first (`shared/components/richTextUtils.ts`'s `stripHtmlToText`) and then applies CSS `line-clamp-3` to that text — matches the original decision to use line-clamp over substring counting, just confirmed against real HTML content now instead of a future hypothetical.
 - If `GET /Posts` gains real backend pagination, this page's "load everything, fake scroll client-side" approach will need to be replaced with real incremental fetching.

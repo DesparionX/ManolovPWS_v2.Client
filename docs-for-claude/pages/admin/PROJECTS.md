@@ -27,10 +27,9 @@ Owner-only listing of every project, sorted newest-first, with quick access to e
 ## Design / Visual Notes
 
 - **Confirmed:** each row shows a small `state` badge/tag (Finished / InDevelopment / Frozen / Abandoned) alongside the project name, since name-only would otherwise hide this useful info entirely
-- **Row hover colorization is state-based**, not a single generic accent color — each state gets its own hover tint (e.g. Finished → a "success"-leaning tone, Abandoned → a muted/dimmed tone), giving an at-a-glance visual read of project health across the whole table. Exact color mapping per state TBD alongside `THEME.md`, but the mechanism (hover tint driven by `state`) is confirmed.
+- **Row hover colorization is state-based**, not a single generic accent color — each state gets its own hover tint, giving an at-a-glance visual read of project health across the whole table. **Placeholder mapping implemented** (`pages/admin/ProjectsPage.tsx`'s `STATE_HOVER_CLASS`) using only existing `THEME.md` tokens, since no dedicated "success"/state palette exists yet: `Finished` → `accent`, `InDevelopment` → `accent` at 50% opacity, `Frozen` → `border-default` (neutral), `Abandoned` → `danger` at 40% opacity. This is a reasonable placeholder, not a confirmed design decision — revisit once real per-state colors are chosen.
 - Same borderless-table-with-divider styling as `admin/posts.md`, for visual consistency across both admin list pages
 - Hover reveals Edit/Delete icons only (two, not three — no pin state to show)
-- Exact colors/icon set pending `THEME.md` decisions
 
 ## Edge Cases
 

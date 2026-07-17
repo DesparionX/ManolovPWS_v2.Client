@@ -12,5 +12,6 @@ function signIn(request: SignInRequest) {
 export function useSignIn() {
   return useMutation({
     mutationFn: signIn,
+    meta: { suppressGlobalError: true },
   });
 }

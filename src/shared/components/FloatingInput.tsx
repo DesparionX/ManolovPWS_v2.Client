@@ -8,6 +8,8 @@ interface FloatingInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
   ({ label, error, rightElement, id, className, ...props }, ref) => {
+    const hasError = Boolean(error);
+
     return (
       <div>
         <div className="relative">
@@ -15,9 +17,12 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
             id={id}
             ref={ref}
             placeholder=" "
-            className={`peer w-full rounded-lg border border-border-default bg-bg-base/50 px-3 pt-5 pb-2 text-text-primary transition-all duration-300 ease-out hover:shadow-[0_0_16px_-4px_var(--color-accent)] focus:border-accent focus:shadow-[0_0_20px_-3px_var(--color-accent)] focus:outline-none ${
-              rightElement ? "pr-12" : ""
-            } ${className ?? ""}`}
+            aria-invalid={hasError}
+            className={`peer w-full rounded-lg border bg-bg-base/50 px-3 pt-5 pb-2 text-text-primary transition-all duration-300 ease-out focus:outline-none ${
+              hasError
+                ? "border-danger"
+                : "border-border-default hover:shadow-[0_0_16px_-4px_var(--color-accent)] focus:border-accent focus:shadow-[0_0_20px_-3px_var(--color-accent)]"
+            } ${rightElement ? "pr-12" : ""} ${className ?? ""}`}
             {...props}
           />
           <label
@@ -32,7 +37,9 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
             </div>
           )}
         </div>
-        {error && <p className="mt-1 text-sm text-danger">{error}</p>}
+        {error && (
+          <p className="mt-2 max-w-[92%] text-sm text-danger">{error}</p>
+        )}
       </div>
     );
   },

@@ -10,7 +10,7 @@ export function Nav() {
           to={link.to}
           end={link.to === "/"}
           className={({ isActive }) =>
-            `text-sm font-medium transition-colors ${
+            `text-sm font-medium transition-colors duration-300 ${
               isActive
                 ? "text-accent"
                 : "text-text-secondary hover:text-text-primary"

@@ -10,23 +10,26 @@ Design tokens and visual conventions for the whole app. Read before styling any 
 
 Based on the glassmorphism/blurred-card direction already set in `pages/home.md` (blurred backgrounds, greyish borders that colorize on hover):
 
-| Token                            | Value                                 | Usage                                                                                                  |
-| -------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `bg-base`                        | `#0a0a0f` (near-black, slightly cool) | Page background                                                                                        |
-| `bg-surface`                     | `#15151d`                             | Card/panel backgrounds (before blur applied)                                                           |
-| `border-default`                 | `#2a2a35` (thin greyish)              | Default card border                                                                                    |
-| `border-hover` / `border-accent` | accent color, see below               | Hover/pinned border colorization                                                                       |
-| `text-primary`                   | `#f2f2f5`                             | Main text                                                                                              |
-| `text-secondary`                 | `#9a9aa8`                             | Dates, meta info, secondary text                                                                       |
-| `accent`                         | `#22D3EE` (electric cyan)             | Hover borders, links, buttons, pinned-post border                                                      |
-| `accent-dark`                    | `#0E7490` (deep cyan-blue)            | Primary submit-button fill (e.g. Sign In) — a calmer, darker accent shade for large solid-fill buttons |
-| `danger`                         | `#F87171` (muted coral-red)           | Form validation errors, destructive-action affordances                                                 |
+| Token                            | Value                                 | Usage                                                                                                                                               |
+| -------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bg-base`                        | `#0a0a0f` (near-black, slightly cool) | Page background                                                                                                                                     |
+| `bg-surface`                     | `#15151d`                             | Card/panel backgrounds (before blur applied)                                                                                                        |
+| `border-default`                 | `#2a2a35` (thin greyish)              | Default card border                                                                                                                                 |
+| `border-hover` / `border-accent` | accent color, see below               | Hover/pinned border colorization                                                                                                                    |
+| `text-primary`                   | `#f2f2f5`                             | Main text                                                                                                                                           |
+| `text-secondary`                 | `#9a9aa8`                             | Dates, meta info, secondary text                                                                                                                    |
+| `accent`                         | `#22D3EE` (electric cyan)             | Hover borders, links, buttons, pinned-post border                                                                                                   |
+| `accent-dark`                    | `#0E7490` (deep cyan-blue)            | Primary submit-button fill (e.g. Sign In) — a calmer, darker accent shade for large solid-fill buttons                                              |
+| `danger`                         | `#F87171` (muted coral-red)           | Form validation errors, the global ErrorModal (border + Dismiss button — not accent, an error is not an info state), destructive-action affordances |
+| `success`                        | `#4ADE80` (clean green)               | The global success Toast (border + text) — confirms a save/create/delete actually completed                                                         |
 
 **Chosen:** electric cyan. Reads as futuristic/HUD-like on the near-black background without being a screen-burning neon, distinct from both the old site's red/orange identity and the generic corporate-blue look most dev portfolios default to — fits the "professional, futuristic, developer/gamer" brief directly.
 
 **Added while polishing `SignInPage`:** `accent-dark` — a deeper shade of the same cyan-blue hue (not a new/unrelated color), used for the submit button fill. Full-brightness `accent` reads great as a thin border/text highlight but felt too loud as a large solid button fill; the darker shade keeps the same family/identity while sitting back visually. Text on it switched to `text-primary` (white) instead of `bg-base` (near-black), since the darker fill no longer has enough contrast for dark text.
 
 **Added while wiring the theme:** `danger` wasn't in the original palette — needed one while styling `SignInPage`'s field validation, and reusing `accent` (cyan) for errors would read as a positive/interactive color, not a warning. Picked a standard muted red rather than guessing something bespoke; flag if you'd rather a different shade or want it tied to the accent hue instead.
+
+**Added while building the admin panel:** `success` — the global Toast originally used neutral `bg-surface`/`text-primary` (per `API-CLIENT.md`'s original design). Confirmed after real usage that blur-autosave saves across Profile/Post/Project Editor need a visible confirmation, not just silence — see `API-CLIENT.md`'s updated Mutation Pattern section. A plain neutral toast didn't read as "success" clearly enough once it was actually firing on every save, so it needed its own color, distinct from `accent` (interactive) and `danger` (error). Standard clean green, not tied to the accent hue — success is conventionally its own color family, not a variant of the brand accent.
 
 ## Typography
 
@@ -45,6 +48,12 @@ Based on the glassmorphism/blurred-card direction already set in `pages/home.md`
 - **Border colorization:** `border-default` → `border-accent` on hover (transition, not instant snap — e.g. `transition-colors duration-200`)
 - **Pinned emphasis:** thicker border width (not just color) — e.g. `border-2` vs `border`, still using `border-accent`
 - **Border radius: soft/rounded.** `rounded-xl` (12px) for cards/panels, `rounded-lg` (8px) for buttons/inputs/smaller controls, `rounded-full` for avatars, pills, and tag/badge chips
+
+## Buttons & Loading State
+
+- **Every action button** (anything that triggers an async/API call — form submits, sign-out, future save/delete/pin actions in the admin panel) **must show a spinning loader in place of its contents while the action is pending**, in addition to being disabled. Implemented once via `shared/components/Button.tsx` — a thin wrapper around `<button>` taking an `isLoading` prop; pass a `useMutation`'s `isPending` straight through. While `isLoading`, the button disables itself automatically and swaps its children for a spinning `Loader2` icon (`lucide-react`, `animate-spin`) — content isn't shown alongside the spinner, it's replaced by it, so icon-only buttons (e.g. the header's sign-out icon) don't end up with two icons side by side.
+- **Excluded: navigation.** Plain links/buttons that just navigate (`Nav`/`MobileNav` links, the header logo's hidden sign-in trigger) don't have a "pending API result" state and shouldn't get this treatment — it's specifically for buttons whose click starts a mutation/request.
+- All new buttons that fire a mutation should use `shared/components/Button.tsx` rather than a bare `<button>`, so this behavior stays consistent app-wide instead of being reimplemented per form.
 
 ## Background & Scrollbars
 

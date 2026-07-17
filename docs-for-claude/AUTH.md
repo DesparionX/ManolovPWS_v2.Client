@@ -55,15 +55,17 @@ Conventions for authentication/authorization on the frontend. Read this before t
 
 ## Refresh Flow
 
-- On 401 from a protected request, attempt a silent refresh (call refresh-token endpoint) before failing the request
+- On 401 from a **protected** request, attempt a silent refresh (call refresh-token endpoint) before failing the request
 - On refresh failure, treat the session as ended — do NOT redirect to sign-in (see Failure / Redirect Behavior below)
 - Avoid infinite refresh loops — a failed refresh should not retry itself
+- **Exception — `POST /Auth/sign-in` (and `POST /Auth/register`) never enter this flow, even on 401.** A 401 from sign-in means *wrong credentials* — an expected, meaningful response for that specific call, not a sign that an existing session/token has expired (there is no session yet; the user is trying to create one). Treating it as session-expiry was a real bug: it triggered a silent-refresh attempt (which predictably failed, since there was never a valid session) followed by the redirect-home behavior below, which reloaded the page and made the login form's own error message disappear after ~1 second before the Owner could read it. `shared/api/httpClient.ts` special-cases these two paths (`SESSION_INDEPENDENT_PATHS`) to skip both the refresh attempt and the redirect, letting their 401/4xx surface as a normal `ApiError` the calling page handles itself (see `pages/sign-in.md`).
 
 ## Failure / Redirect Behavior
 
-- On `401` or `403` (including a failed silent refresh): redirect to the **home page**, never to the login page
+- On `401` or `403` from a **protected** request (including a failed silent refresh): redirect to the **home page**, never to the login page
 - Do not surface "you need to log in" messaging on public-facing routes — since there's only ever one legitimate user (the Owner) and the login route is deliberately secret, exposing its existence defeats the point
 - The Owner reaches login only via the secret route they already know — the app should never link to it, hint at it, or auto-redirect to it
+- **Exception:** `POST /Auth/sign-in` and `POST /Auth/register` are excluded from this redirect (see Refresh Flow above) — their failures are ordinary form-validation-style responses handled inline on the page itself, not session-ended events
 
 ## Protected Routes
 

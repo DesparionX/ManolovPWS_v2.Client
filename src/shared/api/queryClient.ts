@@ -10,7 +10,8 @@ export const queryClient = new QueryClient({
     },
   }),
   mutationCache: new MutationCache({
-    onError: (error) => {
+    onError: (error, _variables, _context, mutation) => {
+      if (mutation.meta?.suppressGlobalError) return;
       if (error instanceof ApiError)
         notificationController.showError(error.message);
     },

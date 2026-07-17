@@ -74,9 +74,9 @@ Education, Experience, Certificates, Languages, Skills, and Contacts all use the
 **Field styling (applies to all text/select/date inputs on this page):**
 
 - Floating labels
-- Rounded/cornered borders, colorized on focus (exact accent color pending `THEME.md`)
-- Colorized shadow on hover (subtle glow effect, same accent)
-- Validation error text rendered directly under the field, styled distinctly (likely a warning/error color, also pending `THEME.md`)
+- Rounded/cornered borders, colorized `accent` on focus; subtle `accent`-colorized glow shadow on hover/focus (see `shared/components/FloatingInput.tsx`, built for `sign-in.md`, reused here)
+- **Invalid state overrides the above:** border turns `danger` (not `accent`), and the hover/focus glow shadow is dropped entirely — a glowing border reads as an inviting/positive affordance, wrong signal for a field that needs correcting
+- Validation error text rendered directly under the field in `danger`, with a little breathing room (not glued to the field's bottom border) and a max-width so long messages don't run edge-to-edge
 
 **Birth Date:** custom-built calendar picker matching the site theme (not the browser's native date input) — must support quick month AND year navigation (not just prev/next month arrows one click at a time — jumping years should be fast, not 90 clicks away)
 
@@ -164,4 +164,5 @@ Array-item field validation (Education/Experience/Certificates/Languages/Skills/
 
 ## Open Questions / Ask Before Assuming
 
-- `FILE-UPLOAD.md` doesn't exist yet — profile picture upload behavior described here assumes that doc will define the actual transport mechanism (likely `multipart/form-data`, exact choice depends on the 3rd-party provider chosen) and CDN provider
+- **`SkillDto.type` shape mismatch, needs live verification:** `openapi.json` types this field as a plain `string`, but `pages/cv.md` documents it as the numeric enum `1 | 2` (`Tech = 1`, `Soft = 2`). Implemented per `cv.md`'s more specific description (`features/profile/types/profileTypes.ts`'s `SkillType = 1 | 2`) since that's the doc that actually explains this field's meaning, but this hasn't been confirmed against a real backend response yet — verify once the API is reachable, and fix the type (and the Tech/Soft toggle in `ProfileArrayTabs.tsx`) if it turns out the backend actually sends something else (e.g. the string labels themselves).
+- **Category normalization simplified:** implemented trim + Title Case (`" category "` / `"CATEGORY"` → `"Category"`), but not the more unusual example from `cv.md` of collapsing spaced-out single letters (`"c a t e g o r y"` → `"Category"`) — that heuristic seemed too fragile/false-positive-prone to implement blindly (could mangle legitimate short multi-word categories). Flag if that exact behavior is actually needed.
