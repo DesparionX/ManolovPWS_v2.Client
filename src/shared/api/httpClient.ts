@@ -84,6 +84,30 @@ async function parseErrors(
   // message it gives instead of silently discarding it.
   if (body && typeof body === "object") {
     const obj = body as Record<string, unknown>;
+
+    // ASP.NET Core's automatic model-validation failure shape is a
+    // ProblemDetails whose `title` is always the generic "One or more
+    // validation errors occurred." — the actually useful, field-specific
+    // reason lives in `errors: { [field]: string[] }`, which the plain
+    // detail/message/title fallback below never looks at. Without this,
+    // every model-binding/validation failure (wrong field type, missing
+    // required field, etc.) surfaced as the same useless generic message
+    // no matter what actually went wrong.
+    if (
+      obj.errors &&
+      typeof obj.errors === "object" &&
+      !Array.isArray(obj.errors)
+    ) {
+      const fieldErrors = Object.entries(
+        obj.errors as Record<string, unknown>,
+      ).flatMap(([field, messages]) =>
+        Array.isArray(messages)
+          ? messages.map((m) => ({ code: field, message: String(m) }))
+          : [],
+      );
+      if (fieldErrors.length > 0) return fieldErrors;
+    }
+
     const message =
       (typeof obj.detail === "string" && obj.detail) ||
       (typeof obj.message === "string" && obj.message) ||

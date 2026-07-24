@@ -5,20 +5,9 @@ import {
   useProjects,
   useDeleteProject,
   PROJECT_STATE_LABELS,
-  type ProjectState,
+  PROJECT_STATE_BADGE_CLASSES,
 } from "../../features/projects";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
-
-// State-based left-border tint on hover — exact color mapping is TBD per
-// projects.md/THEME.md, built here using only existing palette tokens (no new
-// colors invented). Combined with a general background tint so hover is
-// clearly visible regardless of state.
-const STATE_HOVER_CLASS: Record<ProjectState, string> = {
-  Finished: "hover:border-accent",
-  InDevelopment: "hover:border-accent/50",
-  Frozen: "hover:border-border-default",
-  Abandoned: "hover:border-danger/40",
-};
 
 export function ProjectsPage() {
   const navigate = useNavigate();
@@ -36,28 +25,31 @@ export function ProjectsPage() {
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="mx-auto flex h-full w-full max-w-xl flex-col">
       <h1 className="mb-6 text-center text-xl font-semibold text-text-primary">
         All Projects
       </h1>
 
       <div className="flex-1">
         {sorted.length === 0 ? (
-          <p className="text-text-secondary">No projects yet.</p>
+          <p className="text-center text-text-secondary">No projects yet.</p>
         ) : (
           <div className="divide-y divide-border-default">
             {sorted.map((project) => (
               <div
                 key={project.id}
-                className={`group flex items-center justify-between gap-3 rounded-lg border-l-2 border-l-transparent py-3 pr-3 pl-2 transition-colors duration-300 hover:bg-bg-surface/80 ${STATE_HOVER_CLASS[project.state]}`}
+                className="group grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg py-3 px-2 transition-colors duration-300 hover:bg-bg-surface/80"
               >
-                <div className="flex min-w-0 items-center gap-3">
+                <div />
+                <div className="flex min-w-0 items-center justify-center gap-3">
                   <p className="truncate text-text-primary">{project.name}</p>
-                  <span className="shrink-0 rounded-full bg-bg-surface px-2 py-0.5 text-xs text-text-secondary">
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${PROJECT_STATE_BADGE_CLASSES[project.state]}`}
+                  >
                     {PROJECT_STATE_LABELS[project.state]}
                   </span>
                 </div>
-                <div className="flex shrink-0 gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="flex shrink-0 justify-end gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <button
                     type="button"
                     aria-label="Edit"

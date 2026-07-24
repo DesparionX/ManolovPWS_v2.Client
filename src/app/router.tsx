@@ -6,6 +6,7 @@ import { SignInPage } from '../pages/SignInPage'
 import { HomePage } from '../pages/HomePage'
 import { PostDetailPage } from '../pages/PostDetailPage'
 import { ProjectsPage } from '../pages/ProjectsPage'
+import { ProjectDetailPage } from '../pages/ProjectDetailPage'
 import { CVPage } from '../pages/CVPage'
 import { ContactPage } from '../pages/ContactPage'
 import { AdminLayout } from '../pages/admin/AdminLayout'
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
           { index: true, element: <HomePage /> },
           { path: 'posts/:id', element: <PostDetailPage /> },
           { path: 'projects', element: <ProjectsPage /> },
+          { path: 'projects/:id', element: <ProjectDetailPage /> },
           { path: 'cv', element: <CVPage /> },
           { path: 'contact', element: <ContactPage /> },
           { path: 'admin/auth', element: <SignInPage /> },

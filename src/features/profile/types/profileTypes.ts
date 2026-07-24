@@ -31,11 +31,14 @@ export interface LanguageDto {
   isNative: boolean;
 }
 
-// NOTE: openapi.json types `type` as a plain `string`, but pages/cv.md documents
-// it as the numeric enum `1 | 2` (Tech/Soft). Going with cv.md's typed enum
-// since it's the more specific source for this exact field's meaning — flag/fix
-// if real API responses turn out to send something else once this is live-tested.
-export type SkillType = 1 | 2;
+// Confirmed against the backend domain model: SkillType is a C# enum
+// (Tech = 1, Soft = 2) but SkillDto.Type is a string — the use-case layer
+// parses/normalizes/validates the incoming string against the enum names.
+// Sending the numeric value (the original assumption here, based on
+// cv.md's docs) failed model binding/validation server-side ("One or more
+// validation errors occurred.") since the field expects the enum's name,
+// not its underlying int.
+export type SkillType = "Tech" | "Soft";
 
 export interface SkillDto {
   name: string;

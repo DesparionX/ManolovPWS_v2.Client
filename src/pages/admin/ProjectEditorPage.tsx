@@ -6,6 +6,7 @@ import { isRichTextEmpty } from "../../shared/components/richTextUtils";
 import { ImageUpload } from "../../shared/components/ImageUpload";
 import { GalleryUpload } from "../../shared/components/GalleryUpload";
 import { TagInput } from "../../shared/components/TagInput";
+import { Select } from "../../shared/components/Select";
 import { Button } from "../../shared/components/Button";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 import {
@@ -213,13 +214,13 @@ export function ProjectEditorPage() {
   const displayStack = isEditing ? (project?.stack ?? []) : stack;
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6">
       <h1 className="text-xl font-semibold text-text-primary">
         {isEditing ? "Edit Project" : "New Project"}
       </h1>
 
       {isEditing && project && (
-        <div className="flex flex-wrap gap-4 text-xs text-text-secondary">
+        <div className="flex w-full flex-wrap justify-center gap-4 text-xs text-text-secondary">
           <span>ID: {project.id}</span>
           <span>Owner: {project.ownerId}</span>
           <span>Uploaded: {project.uploadedDate}</span>
@@ -227,59 +228,7 @@ export function ProjectEditorPage() {
         </div>
       )}
 
-      <FloatingInput
-        id="name"
-        label="Name"
-        value={name}
-        error={nameError ?? undefined}
-        onChange={(e) => setName(e.target.value)}
-        onBlur={(e) => handleNameBlur(e.target.value)}
-      />
-
-      <RichTextEditor
-        key={descriptionResetKey}
-        initialContent={isEditing ? (project?.description ?? "") : description}
-        onBlurContent={handleDescriptionBlur}
-        error={descriptionError ?? undefined}
-      />
-
-      <div>
-        <label htmlFor="state" className="mb-1 block text-sm text-text-secondary">
-          State
-        </label>
-        <select
-          id="state"
-          value={displayState}
-          onChange={(e) => handleStateChange(e.target.value as ProjectState)}
-          className="w-full rounded-lg border border-border-default bg-bg-base/50 px-3 py-2 text-text-primary"
-        >
-          {PROJECT_STATES.map((s) => (
-            <option key={s} value={s}>
-              {PROJECT_STATE_LABELS[s]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <FloatingInput
-        id="liveUrl"
-        label="Live URL"
-        value={liveUrl}
-        error={liveUrlError ?? undefined}
-        onChange={(e) => setLiveUrl(e.target.value)}
-        onBlur={(e) => handleLiveUrlBlur(e.target.value)}
-      />
-
-      <FloatingInput
-        id="gitHubUrl"
-        label="GitHub URL"
-        value={gitHubUrl}
-        error={gitHubUrlError ?? undefined}
-        onChange={(e) => setGitHubUrl(e.target.value)}
-        onBlur={(e) => handleGitHubUrlBlur(e.target.value)}
-      />
-
-      <div>
+      <div className="flex w-full flex-col items-center">
         <span className="mb-1 block text-sm text-text-secondary">
           Thumbnail (required)
         </span>
@@ -289,11 +238,69 @@ export function ProjectEditorPage() {
           folder="manolovpws/projects"
         />
         {thumbError && (
-          <p className="mt-2 max-w-[92%] text-sm text-danger">{thumbError}</p>
+          <p className="mt-2 text-sm text-danger">{thumbError}</p>
         )}
       </div>
 
-      <div>
+      <div className="w-full">
+        <FloatingInput
+          id="name"
+          label="Name"
+          value={name}
+          error={nameError ?? undefined}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={(e) => handleNameBlur(e.target.value)}
+        />
+      </div>
+
+      <div className="w-full">
+        <RichTextEditor
+          key={descriptionResetKey}
+          initialContent={isEditing ? (project?.description ?? "") : description}
+          onBlurContent={handleDescriptionBlur}
+          error={descriptionError ?? undefined}
+        />
+      </div>
+
+      <div className="w-full">
+        <label htmlFor="state" className="mb-1 block text-sm text-text-secondary">
+          State
+        </label>
+        <Select
+          id="state"
+          value={displayState}
+          options={PROJECT_STATES.map((s) => ({
+            value: s,
+            label: PROJECT_STATE_LABELS[s],
+          }))}
+          onChange={(v) => handleStateChange(v as ProjectState)}
+          className="rounded-lg px-3 py-2 pr-9"
+        />
+      </div>
+
+      <div className="w-full">
+        <FloatingInput
+          id="liveUrl"
+          label="Live URL"
+          value={liveUrl}
+          error={liveUrlError ?? undefined}
+          onChange={(e) => setLiveUrl(e.target.value)}
+          onBlur={(e) => handleLiveUrlBlur(e.target.value)}
+        />
+      </div>
+
+      <div className="w-full">
+        <FloatingInput
+          id="gitHubUrl"
+          label="GitHub URL"
+          value={gitHubUrl}
+          error={gitHubUrlError ?? undefined}
+          onChange={(e) => setGitHubUrl(e.target.value)}
+          onBlur={(e) => handleGitHubUrlBlur(e.target.value)}
+        />
+      </div>
+
+      <div className="w-full">
         <span className="mb-1 block text-sm text-text-secondary">Gallery</span>
         <GalleryUpload
           value={displayGallery}
@@ -306,14 +313,16 @@ export function ProjectEditorPage() {
         />
       </div>
 
-      <TagInput
-        label="Stack"
-        value={displayStack}
-        onChange={(tags) => {
-          if (isEditing) updateStack.mutate({ newStack: tags });
-          else setStack(tags);
-        }}
-      />
+      <div className="w-full">
+        <TagInput
+          label="Stack"
+          value={displayStack}
+          onChange={(tags) => {
+            if (isEditing) updateStack.mutate({ newStack: tags });
+            else setStack(tags);
+          }}
+        />
+      </div>
 
       {!isEditing && (
         <Button

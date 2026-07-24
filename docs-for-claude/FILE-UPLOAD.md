@@ -10,7 +10,8 @@ Chosen specifically because of its **unsigned upload preset** workflow — uploa
 
 - Create a Cloudinary account, note the **Cloud Name**
 - Create an **unsigned upload preset** (e.g. `portfolio_unsigned`)
-- On the preset itself, restrict `allowed_formats` (see Validation below) and set a max file size — this is the actual security boundary, since the preset name is necessarily visible in frontend code and can't be kept secret
+- On the preset itself, restrict **Allowed formats** (under the "Optimize and Deliver" tab in Cloudinary's console — not "General") to `jpg,jpeg,png`
+- **Max file size is enforced client-side only, not on the Cloudinary preset.** Cloudinary's console doesn't expose a preset-level file-size field for raw unsigned uploads via `fetch`/`FormData` (the `maxFileSize` option in their docs applies specifically to their own pre-built Upload Widget, which we're not using). This is acceptable here, not just a fallback: every upload flow in this app sits behind the `/admin` route guard, so only the authenticated Owner can ever trigger an upload — there's no public/adversarial surface that a missing server-side size limit would expose.
 - Store `Cloud Name` and the preset name as Vite env vars: `VITE_CLOUDINARY_CLOUD_NAME`, `VITE_CLOUDINARY_UPLOAD_PRESET`
 
 ## Location in codebase
@@ -53,7 +54,7 @@ async function uploadImage(file: File, folder: string): Promise<string> {
   - `manolovpws/posts` — post thumbs AND galleries (shared, not split further)
   - `manolovpws/projects` — project thumbs AND galleries (shared, not split further)
   - **Why flat, not nested per-entity:** in Create mode, thumb/gallery uploads happen _before_ the post/project exists (image picked → uploaded immediately, before the "Create" submit fires `POST` and a real `id` is assigned) — so there's no id yet to name a subfolder after. Cloudinary auto-creates folders on upload with no manual step, but _moving_ an asset into a different folder afterward, or bulk-deleting a folder's contents, both require signed Admin API calls (need the API secret) — which we don't have, by design. So even a "temp folder → move once id exists" approach isn't achievable without a backend. Flat folders with Cloudinary's auto-generated unique filenames (no collision risk) is the achievable option given this constraint.
-  - **Needs verification:** confirm `folder` is accepted as a direct parameter on unsigned uploads when we actually wire this up (Cloudinary restricts which parameters unsigned calls may pass directly)
+  - **Confirmed:** `folder` is on Cloudinary's official allowed-parameters list for unsigned upload calls (alongside `upload_preset`, `public_id`, `tags`, etc.), so passing it dynamically per upload — rather than fixing it on the preset itself — works as designed.
 - Return value is just `secure_url` (the hosted HTTPS URL) — nothing else from Cloudinary's response is needed; this URL is what gets sent to the relevant backend `PUT` endpoint (e.g. `PUT /Account/profile-picture`, `PUT /Posts/{id}/thumb`)
 
 ## Live Preview Pattern (used by every consumer of this service)
@@ -70,7 +71,7 @@ async function uploadImage(file: File, folder: string): Promise<string> {
 | Allowed file types | `.jpg`, `.jpeg`, `.png` |
 | Max file size      | 10 MB                   |
 
-These should also be configured on the Cloudinary preset itself (see Setup), since client-side validation alone can be bypassed.
+File type restriction is enforced both client-side and on the Cloudinary preset (Allowed formats). File size is client-side only — see the Setup section above for why that's an acceptable boundary here (Owner-only, authenticated upload surface).
 
 ## Multi-image (Gallery) Handling
 
@@ -84,9 +85,9 @@ Post/Project gallery fields (max 15 images each, per `admin/post-editor.md` / `a
 ## Edge Cases
 
 - Upload fails partway through a multi-image gallery batch (e.g. 3 of 5 succeed, 2 fail) — surface which ones failed, let the Owner retry just those, don't discard the successful ones
-- Very large file selected — reject before attempting upload (per the 5MB rule), not after a slow failed network attempt
+- Very large file selected — reject before attempting upload (per the 10MB rule), not after a slow failed network attempt
 - Network failure mid-upload — clear error state, no silent failure; the field should not fire its backend `PUT` if the upload itself never completed
 
 ## Open Questions / Ask Before Assuming
 
-- Confirm `folder` is a valid direct parameter for unsigned uploads once this is actually implemented (see note above) — if not, we'll need one preset per folder instead of one shared preset with a dynamic `folder` param
+- None currently outstanding.

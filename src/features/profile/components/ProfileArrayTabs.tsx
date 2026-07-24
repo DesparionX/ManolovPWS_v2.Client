@@ -1,6 +1,9 @@
 import { ListEditor } from "../../../shared/components/ListEditor";
 import { FloatingInput } from "../../../shared/components/FloatingInput";
 import { DatePicker } from "../../../shared/components/DatePicker";
+import { Select } from "../../../shared/components/Select";
+import { RichTextEditor } from "../../../shared/components/RichTextEditor";
+import { isRichTextEmpty } from "../../../shared/components/richTextUtils";
 import type {
   EducationDto,
   JobDto,
@@ -136,7 +139,7 @@ function validateExperience(item: JobDto) {
     item.title.length <= 50 &&
     item.company.length > 0 &&
     item.company.length <= 50 &&
-    item.description.length > 0 &&
+    !isRichTextEmpty(item.description) &&
     item.description.length <= 10000 &&
     item.startDate.length > 0 &&
     notFuture(item.startDate) &&
@@ -181,11 +184,9 @@ export function ExperienceTab({
             onChange={(e) => onChange({ ...item, company: e.target.value })}
           />
           <div className="md:col-span-2">
-            <FloatingInput
-              id="description"
-              label="Description"
-              value={item.description}
-              onChange={(e) => onChange({ ...item, description: e.target.value })}
+            <RichTextEditor
+              initialContent={item.description}
+              onBlurContent={(html) => onChange({ ...item, description: html })}
             />
           </div>
           <DatePicker
@@ -364,36 +365,33 @@ export function LanguagesTab({
           </label>
           {!item.isNative && (
             <>
-              <select
+              <Select
                 value={item.readingLevel ?? ""}
-                onChange={(e) => onChange({ ...item, readingLevel: e.target.value })}
-                className="rounded-lg border border-border-default bg-bg-base/50 px-3 py-2 text-text-primary"
-              >
-                <option value="">Reading level</option>
-                {CEFR_LEVELS.map((l) => (
-                  <option key={l} value={l}>{l}</option>
-                ))}
-              </select>
-              <select
+                onChange={(v) => onChange({ ...item, readingLevel: v })}
+                options={[
+                  { value: "", label: "Reading level" },
+                  ...CEFR_LEVELS.map((l) => ({ value: l, label: l })),
+                ]}
+                className="rounded-lg px-3 py-2 pr-9"
+              />
+              <Select
                 value={item.writingLevel ?? ""}
-                onChange={(e) => onChange({ ...item, writingLevel: e.target.value })}
-                className="rounded-lg border border-border-default bg-bg-base/50 px-3 py-2 text-text-primary"
-              >
-                <option value="">Writing level</option>
-                {CEFR_LEVELS.map((l) => (
-                  <option key={l} value={l}>{l}</option>
-                ))}
-              </select>
-              <select
+                onChange={(v) => onChange({ ...item, writingLevel: v })}
+                options={[
+                  { value: "", label: "Writing level" },
+                  ...CEFR_LEVELS.map((l) => ({ value: l, label: l })),
+                ]}
+                className="rounded-lg px-3 py-2 pr-9"
+              />
+              <Select
                 value={item.speakingLevel ?? ""}
-                onChange={(e) => onChange({ ...item, speakingLevel: e.target.value })}
-                className="rounded-lg border border-border-default bg-bg-base/50 px-3 py-2 text-text-primary"
-              >
-                <option value="">Speaking level</option>
-                {CEFR_LEVELS.map((l) => (
-                  <option key={l} value={l}>{l}</option>
-                ))}
-              </select>
+                onChange={(v) => onChange({ ...item, speakingLevel: v })}
+                options={[
+                  { value: "", label: "Speaking level" },
+                  ...CEFR_LEVELS.map((l) => ({ value: l, label: l })),
+                ]}
+                className="rounded-lg px-3 py-2 pr-9"
+              />
             </>
           )}
         </div>
@@ -404,7 +402,7 @@ export function LanguagesTab({
 
 // --- Skills ---
 
-const emptySkill: SkillDto = { name: "", level: 1, type: 2, category: "" };
+const emptySkill: SkillDto = { name: "", level: 1, type: "Soft", category: "" };
 
 function validateSkill(item: SkillDto) {
   return (
@@ -438,7 +436,7 @@ export function SkillsTab({
         <p className="truncate text-text-primary">
           {item.name || "New entry"}{" "}
           <span className="text-text-secondary">
-            — {item.type === 1 ? "Tech" : "Soft"} · {item.category}
+            — {item.type} · {item.category}
           </span>
         </p>
       )}
@@ -453,18 +451,18 @@ export function SkillsTab({
           <div className="flex overflow-hidden rounded-lg border border-border-default">
             <button
               type="button"
-              onClick={() => onChange({ ...item, type: 1 })}
+              onClick={() => onChange({ ...item, type: "Tech" })}
               className={`flex-1 py-2 text-sm transition-colors duration-300 ${
-                item.type === 1 ? "bg-accent text-bg-base" : "text-text-secondary"
+                item.type === "Tech" ? "bg-accent text-bg-base" : "text-text-secondary"
               }`}
             >
               Tech
             </button>
             <button
               type="button"
-              onClick={() => onChange({ ...item, type: 2 })}
+              onClick={() => onChange({ ...item, type: "Soft" })}
               className={`flex-1 py-2 text-sm transition-colors duration-300 ${
-                item.type === 2 ? "bg-accent text-bg-base" : "text-text-secondary"
+                item.type === "Soft" ? "bg-accent text-bg-base" : "text-text-secondary"
               }`}
             >
               Soft

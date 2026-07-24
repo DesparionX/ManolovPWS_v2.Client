@@ -17,6 +17,7 @@ import {
   subMonths,
 } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import { Select } from "./Select";
 
 interface DatePickerProps {
   label: string;
@@ -107,32 +108,24 @@ export function DatePicker({
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <div className="flex gap-2">
-                <select
-                  value={viewDate.getMonth()}
-                  onChange={(e) =>
-                    setViewDate((d) => setMonth(d, Number(e.target.value)))
-                  }
-                  className="rounded-md border border-border-default bg-bg-base/50 px-2 py-1 text-sm text-text-primary"
-                >
-                  {MONTH_NAMES.map((m, i) => (
-                    <option key={m} value={i}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={viewDate.getFullYear()}
-                  onChange={(e) =>
-                    setViewDate((d) => setYear(d, Number(e.target.value)))
-                  }
-                  className="rounded-md border border-border-default bg-bg-base/50 px-2 py-1 text-sm text-text-primary"
-                >
-                  {years.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={String(viewDate.getMonth())}
+                  onChange={(v) => setViewDate((d) => setMonth(d, Number(v)))}
+                  options={MONTH_NAMES.map((m, i) => ({
+                    value: String(i),
+                    label: m,
+                  }))}
+                  className="rounded-md py-1 pr-7 pl-2 text-sm"
+                />
+                <Select
+                  value={String(viewDate.getFullYear())}
+                  onChange={(v) => setViewDate((d) => setYear(d, Number(v)))}
+                  options={years.map((y) => ({
+                    value: String(y),
+                    label: String(y),
+                  }))}
+                  className="rounded-md py-1 pr-7 pl-2 text-sm"
+                />
               </div>
               <button
                 type="button"

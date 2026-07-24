@@ -14,6 +14,7 @@
   --color-text-secondary: #9a9aa8;
   --color-danger: #f87171;
   --color-success: #4ade80;
+  --color-frozen: #818cf8;
 
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 }
@@ -32,6 +33,18 @@ html {
 
 body {
   color: var(--color-text-primary);
+  /* Plain text isn't editable anywhere outside real form fields — browsers
+     default `cursor: auto` to an I-beam whenever the pointer is over text,
+     which reads as "this is editable" everywhere on the site, not just in
+     inputs. Force the normal arrow by default; restore the text cursor only
+     for elements that are actually editable, below. */
+  cursor: default;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  cursor: text;
 }
 
 * {
@@ -120,21 +133,24 @@ body {
   }
 }
 
-/* Pinned-post border glow — a soft blue comet that slowly travels around
-   the card's edge. Lives on an outer wrapper (not the card itself), since
-   the card needs overflow:hidden for its thumb's rounded corners, which
-   would otherwise clip this pseudo-element's slight outward offset. */
+/* Generic state-indicator border glow — a soft comet that slowly travels
+   around a card's edge, colored via the --glow-color custom property set
+   inline per element (pinned posts use a fixed blue; project cards set it
+   per their `state`, one of four colors). Lives on an outer wrapper (not
+   the card itself), since the card needs overflow:hidden for its thumb's
+   rounded corners, which would otherwise clip this pseudo-element's slight
+   outward offset. */
 @property --border-angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
 
-.pinned-glow {
+.state-glow {
   position: relative;
 }
 
-.pinned-glow::before {
+.state-glow::before {
   content: "";
   position: absolute;
   inset: -3px;
@@ -145,10 +161,10 @@ body {
     from var(--border-angle),
     transparent 0deg,
     transparent 220deg,
-    rgba(14, 116, 144, 0) 250deg,
-    rgba(14, 116, 144, 0.9) 285deg,
-    rgba(14, 116, 144, 0.9) 305deg,
-    rgba(14, 116, 144, 0) 340deg,
+    transparent 250deg,
+    var(--glow-color) 285deg,
+    var(--glow-color) 305deg,
+    transparent 340deg,
     transparent 360deg
   );
   -webkit-mask:
@@ -175,7 +191,31 @@ body {
     transition: none;
   }
 
-  .pinned-glow::before {
+  .state-glow::before {
+    animation: none;
+  }
+}
+
+/* CV page tab icons — hexagon badges drawn as SVG polygons (not CSS
+   clip-path), each connected to the next by its own line segment (see
+   pages/CV.md). SVG lets the border be a real stroke: a constant dark-gray
+   outline plus a second, brighter dashed stroke animated along the same
+   path via stroke-dashoffset — a thin highlight traveling *along the
+   outline*, not a filled conic-gradient sweep (which read as a radar scan
+   rather than a border glow when tried against a clipped shape). */
+.hex-trace {
+  stroke-dasharray: 24 138;
+  animation: hex-trace-dash 5s linear infinite;
+}
+
+@keyframes hex-trace-dash {
+  to {
+    stroke-dashoffset: -162;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hex-trace {
     animation: none;
   }
 }

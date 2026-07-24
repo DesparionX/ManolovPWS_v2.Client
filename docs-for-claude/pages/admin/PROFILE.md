@@ -121,9 +121,11 @@ Array-item field validation (Education/Experience/Certificates/Languages/Skills/
 |---|---|---|
 | Title (Position) | Yes | Max 50 chars |
 | Company | Yes | Max 50 chars |
-| Description | Yes | Max 10,000 chars |
+| Description | Yes | Rich text (TipTap) — must contain actual typed content (empty check via `isRichTextEmpty`, same as Post/Project descriptions), max 10,000 chars |
 | Start Date | Yes | Cannot be in the future |
 | End Date | No | Ongoing if absent; cannot be before Start Date |
+
+**Revised:** Description was originally a plain single-line text input, which couldn't hold bullet points or line breaks — the CV page's Employment History tab needed those to render a real job description properly, so this field was upgraded to the same TipTap `RichTextEditor` used for Post/Project descriptions (`features/profile/components/ProfileArrayTabs.tsx`'s `ExperienceTab`). `JobDto.description` is now HTML, same convention as `PostReadModel.context` / `ProjectReadModel.description` — anywhere it's displayed (CV page's Employment History) renders it via `dangerouslySetInnerHTML`, not as plain text.
 
 **Certificates**
 | Field | Required | Rules |

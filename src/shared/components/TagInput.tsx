@@ -20,7 +20,7 @@ export function TagInput({ label, value, onChange, error }: TagInputProps) {
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === " " || e.key === "," || e.key === "Enter") {
+    if (e.key === "," || e.key === "Enter") {
       e.preventDefault();
       commitDraft();
     } else if (e.key === "Backspace" && draft === "" && value.length > 0) {

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Pin, Share2 } from "lucide-react";
 import { stripHtmlToText } from "../../../shared/components/richTextUtils";
@@ -16,21 +17,32 @@ export function PostCard({ post }: PostCardProps) {
   }
 
   return (
-    <div className={`rounded-xl ${post.isPinned ? "pinned-glow" : ""}`}>
+    <div
+      className={`rounded-xl ${post.isPinned ? "state-glow" : ""}`}
+      style={
+        post.isPinned
+          ? ({ "--glow-color": "rgba(14, 116, 144, 0.9)" } as CSSProperties)
+          : undefined
+      }
+    >
       <article className="overflow-hidden rounded-xl border border-border-default/50 bg-bg-surface/60 shadow-md backdrop-blur-md">
+        <div className="relative flex items-center justify-center px-5 pt-5 pb-3">
+          {post.isPinned && (
+            <Pin
+              className="absolute left-5 h-5 w-5 rotate-45 text-accent"
+              aria-label="Pinned"
+            />
+          )}
+          <h2 className="text-center text-lg font-semibold text-text-primary">
+            {post.title}
+          </h2>
+        </div>
+
         {post.thumb && (
           <img src={post.thumb} alt="" className="h-48 w-full object-cover" />
         )}
+
         <div className="p-5">
-          <div className="mb-2 flex items-center gap-2 text-xs text-text-secondary">
-            {post.isPinned && (
-              <Pin className="h-3.5 w-3.5 shrink-0 text-accent" aria-label="Pinned" />
-            )}
-            <span>{post.publishedDate}</span>
-          </div>
-          <h2 className="mb-2 text-lg font-semibold text-text-primary">
-            {post.title}
-          </h2>
           <p className="line-clamp-3 text-sm text-text-secondary">
             {stripHtmlToText(post.context)}
           </p>
@@ -50,6 +62,9 @@ export function PostCard({ post }: PostCardProps) {
               <Share2 className="h-4 w-4" />
             </button>
           </div>
+          <p className="mt-4 text-center text-xs text-text-secondary">
+            {post.publishedDate}
+          </p>
         </div>
       </article>
     </div>

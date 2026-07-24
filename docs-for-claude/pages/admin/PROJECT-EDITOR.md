@@ -60,7 +60,7 @@ Single form for both creating a new project and editing an existing one.
 
 - Same field styling conventions as `admin/profile.md` / `admin/post-editor.md`: floating labels, colorized focus borders, hover shadow, validation errors under fields
 - Label-only fields (`id`, `ownerId`, `uploadedDate`, `updatedDate`) styled as visually read-only, same convention as Post Editor
-- **Stack tag input:** single-word tags only (e.g. "C#", "PostgreSQL") — typing a space or comma commits the current word as a tag and wraps it into a pill/chip. Each tag shows a small "×" icon on hover for removal — no confirmation needed for removing a tag (low-stakes, easily re-added)
+- **Stack tag input:** tags can contain spaces (e.g. "ASP.NET Core", "GitHub Actions") — only typing a **comma** (or pressing Enter) commits the current text as a tag and wraps it into a pill/chip. **Revised:** originally space also committed a tag, which made multi-word stack entries impossible to type (space always split them apart mid-entry); comma-only splitting was the actual real-world requirement. Each tag shows a small "×" icon on hover for removal — no confirmation needed for removing a tag (low-stakes, easily re-added)
 - `state` dropdown options should read as human-friendly labels (e.g. "In Development" for `InDevelopment`) even though the underlying value sent to the API is the PascalCase enum string
 - TipTap toolbar styling TBD alongside `THEME.md`, consistent with Post Editor
 
@@ -75,7 +75,7 @@ Single form for both creating a new project and editing an existing one.
 | `gitHubUrl`   | No       | Valid URL format when provided                                                                                                           |
 | `gallery`     | No       | Max 15 images, via `FILE-UPLOAD.md`                                                                                                      |
 | `thumb`       | Yes      | Single image, via `FILE-UPLOAD.md` — required, unlike Post's optional `thumb`                                                            |
-| `stack`       | Yes      | At least 1 tag required; each tag is a single word (see Design notes for the tag-input interaction)                                      |
+| `stack`       | Yes      | At least 1 tag required; a tag can contain spaces, only a comma (or Enter) commits it (see Design notes for the tag-input interaction)   |
 
 ## Edge Cases
 
