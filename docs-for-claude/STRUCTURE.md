@@ -42,6 +42,7 @@ shared/layout/
 ```
 
 - The logo inside `Header.tsx` doubles as the hidden admin entry trigger — double-click (desktop) / double-tap (mobile, custom-detected) navigates to `/admin/auth` if signed out, or straight to `/admin` if a session is already active. No hover cursor change (must not look interactive). Full details in `docs-for-claude/pages/sign-in.md`.
+- **`Header.tsx` also renders the unread-messages badge**, positioned near the logout icon — both are conditionally rendered only when `authStore.isAuthenticated()` is true (per `AUTH.md`), since neither makes sense for an anonymous visitor. The badge's count comes from the same shared TanStack Query cache entry (`GET /Inbox/messages`) that powers `admin-layout.md`'s Inbox nav item — one query, two display locations, always in sync. Full behavior documented in `docs-for-claude/pages/admin/inbox.md`.
 
 ## `pages/`
 

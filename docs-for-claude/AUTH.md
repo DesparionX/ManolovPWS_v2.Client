@@ -48,7 +48,7 @@ Conventions for authentication/authorization on the frontend. Read this before t
     accessToken: {
       token: string;
       expiresAtUtc: string; // ISO date-time
-    };
+    }
   }
   ```
   Wrapped under `accessToken`, same nesting as sign-in's response — not flat. Replace the in-memory access token with `accessToken.token`/`accessToken.expiresAtUtc` on every successful refresh.
@@ -58,7 +58,7 @@ Conventions for authentication/authorization on the frontend. Read this before t
 - On 401 from a **protected** request, attempt a silent refresh (call refresh-token endpoint) before failing the request
 - On refresh failure, treat the session as ended — do NOT redirect to sign-in (see Failure / Redirect Behavior below)
 - Avoid infinite refresh loops — a failed refresh should not retry itself
-- **Exception — `POST /Auth/sign-in` (and `POST /Auth/register`) never enter this flow, even on 401.** A 401 from sign-in means *wrong credentials* — an expected, meaningful response for that specific call, not a sign that an existing session/token has expired (there is no session yet; the user is trying to create one). Treating it as session-expiry was a real bug: it triggered a silent-refresh attempt (which predictably failed, since there was never a valid session) followed by the redirect-home behavior below, which reloaded the page and made the login form's own error message disappear after ~1 second before the Owner could read it. `shared/api/httpClient.ts` special-cases these two paths (`SESSION_INDEPENDENT_PATHS`) to skip both the refresh attempt and the redirect, letting their 401/4xx surface as a normal `ApiError` the calling page handles itself (see `pages/sign-in.md`).
+- **Exception — `POST /Auth/sign-in` (and `POST /Auth/register`) never enter this flow, even on 401.** A 401 from sign-in means _wrong credentials_ — an expected, meaningful response for that specific call, not a sign that an existing session/token has expired (there is no session yet; the user is trying to create one). Treating it as session-expiry was a real bug: it triggered a silent-refresh attempt (which predictably failed, since there was never a valid session) followed by the redirect-home behavior below, which reloaded the page and made the login form's own error message disappear after ~1 second before the Owner could read it. `shared/api/httpClient.ts` special-cases these two paths (`SESSION_INDEPENDENT_PATHS`) to skip both the refresh attempt and the redirect, letting their 401/4xx surface as a normal `ApiError` the calling page handles itself (see `pages/sign-in.md`).
 
 ## Failure / Redirect Behavior
 
@@ -95,6 +95,7 @@ Confirmed with the project owner directly (not derived from the spec):
 - `GET /Projects`, `GET /Projects/{id}`
 - `GET /CV`
 - `POST /Auth/register`, `POST /Auth/sign-in`, `POST /Auth/refresh-token`
+- `POST /Contact/messages` — sending a contact message. Lives under its own `ContactController`, deliberately split from `InboxController` (see `pages/admin/inbox.md`) so a public action never sits in the same controller as protected ones — see `pages/contact.md`.
 
 **Protected (requires valid access token):**
 
@@ -103,6 +104,7 @@ Confirmed with the project owner directly (not derived from the spec):
 - All mutating `Posts`/`Projects` endpoints (`POST`, `PUT`, `DELETE`)
 - `POST /Auth/sign-out`
 - `GET /Users` — owner-only (returns full user list)
+- All `/Inbox/messages` endpoints (`GET`, `PUT /Inbox/messages/{id}`, `DELETE /Inbox/messages/{id}`) — owner-only, per `pages/admin/inbox.md`
 
 **Conditional / dual-response (special handling required):**
 

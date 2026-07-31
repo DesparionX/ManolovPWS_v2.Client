@@ -1009,6 +1009,80 @@
         ]
       }
     },
+    "/Contact/messages": {
+      "post": {
+        "tags": [
+          "Contact"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessageRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessageRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
     "/CV": {
       "get": {
         "tags": [
@@ -1034,6 +1108,118 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Inbox/messages": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageReadModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageReadModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageReadModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Inbox/messages/{id}": {
+      "put": {
+        "tags": [
+          "Inbox"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageReadModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Inbox"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -2376,6 +2562,69 @@
           }
         }
       },
+      "MessageReadModel": {
+        "required": [
+          "id",
+          "senderName",
+          "senderEmail",
+          "senderMetadata",
+          "title",
+          "context",
+          "sentDate",
+          "isUnread"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderName": {
+            "type": "string"
+          },
+          "senderEmail": {
+            "type": "string"
+          },
+          "senderMetadata": {
+            "$ref": "#/components/schemas/SenderMetadataDto"
+          },
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "sentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isUnread": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewMessageRequest": {
+        "required": [
+          "title",
+          "context",
+          "senderName",
+          "senderEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "senderName": {
+            "type": "string"
+          },
+          "senderEmail": {
+            "type": "string"
+          }
+        }
+      },
       "NewPostRequest": {
         "required": [
           "title",
@@ -2857,6 +3106,21 @@
           }
         }
       },
+      "SenderMetadataDto": {
+        "required": [
+          "ipAddress",
+          "userAgent"
+        ],
+        "type": "object",
+        "properties": {
+          "ipAddress": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          }
+        }
+      },
       "SignInApiResponse": {
         "required": [
           "accessToken",
@@ -3297,7 +3561,13 @@
       "name": "Auth"
     },
     {
+      "name": "Contact"
+    },
+    {
       "name": "CV"
+    },
+    {
+      "name": "Inbox"
     },
     {
       "name": "Posts"

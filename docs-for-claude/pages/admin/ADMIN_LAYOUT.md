@@ -11,7 +11,7 @@ Owner-only management area. Persistent inner navigation on the left, page conten
 - `/admin` and `/admin/profile` — both render the same Profile content directly (no redirect between them; two paths, one component). Own doc: `profile.md`
 - `/admin/posts` — own doc: `posts.md`
 - `/admin/projects` — own doc: `projects.md`
-- `/admin/inbox` — own doc: `inbox.md` (blocked — Contact module doesn't exist backend-side yet, build last)
+- `/admin/inbox` — own doc: `inbox.md`
 
 All are real, bookmarkable, protected nested routes — not client-side tab state.
 
@@ -28,6 +28,7 @@ All are real, bookmarkable, protected nested routes — not client-side tab stat
 - Left: persistent inner nav — Profile, All Posts, All Projects, Inbox. This is separate from (nested inside) the main app's outer Header/Nav from `STRUCTURE.md`'s SPA shell — both are visible simultaneously, outer nav for site-wide navigation, inner nav for admin sections
 - Right: content area = React Router `<Outlet />`, swaps per child route
 - Active inner-nav item highlighted based on current route (`/admin/posts` → "All Posts" highlighted, etc.) — treat `/admin` and `/admin/profile` as the same route for this purpose, so landing on bare `/admin` still highlights "Profile" rather than nothing
+- **Inbox nav item shows the unread count** (small badge, e.g. "3"), same number as the badge on the main Header's logout-adjacent icon (see `STRUCTURE.md`'s `shared/layout` notes and `inbox.md`) — both read from the same shared query, so they always agree
 
 ## Design / Visual Notes
 
@@ -39,7 +40,7 @@ All are real, bookmarkable, protected nested routes — not client-side tab stat
 - `docs-for-claude/pages/admin/profile.md`
 - `docs-for-claude/pages/admin/posts.md`
 - `docs-for-claude/pages/admin/projects.md`
-- `docs-for-claude/pages/admin/inbox.md` — not yet created, blocked on Contact module
+- `docs-for-claude/pages/admin/inbox.md`
 - `docs-for-claude/pages/sign-in.md` — not a child of this layout (see Routes exception above), listed for cross-reference since it's the entry point into `/admin`
 
 ## Open Questions / Ask Before Assuming
