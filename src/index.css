@@ -47,6 +47,64 @@ textarea,
   cursor: text;
 }
 
+/* Browsers paint autofilled inputs with their own background/text color
+   (usually a yellow or blue tint) via a UA style that normal
+   background-color/color rules can't override — the standard workaround is
+   an opaque inset box-shadow large enough to fully cover it, plus
+   -webkit-text-fill-color since `color` alone is ignored on autofilled
+   text. The absurdly long background-color transition delay stops the
+   native tint from flashing on screen for a frame before our override
+   paints over it.
+   The covering color can't just be `--color-bg-base` — a field's actual
+   background is the translucent `bg-bg-base/50` blended with whatever's
+   behind it (typically the `bg-bg-surface/60` card panel), which reads
+   visibly lighter than solid opaque bg-base ("looks black" next to a
+   manually-typed field in the same box). An inset box-shadow can't be
+   translucent and still fully cover the native autofill color underneath,
+   so `color-mix()` approximates that blended result as a flat color
+   instead.
+   Duplicates FloatingInput's own hover/focus glow values (rather than
+   relying on its Tailwind classes) because box-shadow doesn't merge across
+   separate rules — whichever rule's box-shadow applies replaces the whole
+   property, so the autofill-covering shadow and the focus/hover glow have
+   to be combined into one box-shadow value here to both show at once.
+   Only `background-color` gets the 9999s delay — this `:-webkit-autofill`
+   base rule keeps matching for as long as the field holds autofilled
+   content (long after it's actually blurred), so putting `box-shadow` on
+   the same 9999s delay froze the last real box-shadow (e.g. the focus
+   glow) on screen indefinitely instead of letting it transition back down
+   on blur like normal. `box-shadow` gets the app's own 500ms instead. */
+input:-webkit-autofill,
+input:autofill {
+  -webkit-text-fill-color: var(--color-text-primary);
+  caret-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset;
+  box-shadow: 0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset;
+  transition:
+    background-color 9999s ease-in-out 0s,
+    box-shadow 500ms ease-out 0s;
+}
+
+input:-webkit-autofill:hover,
+input:autofill:hover {
+  -webkit-box-shadow:
+    0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset,
+    0 0 16px -4px var(--color-accent);
+  box-shadow:
+    0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset,
+    0 0 16px -4px var(--color-accent);
+}
+
+input:-webkit-autofill:focus,
+input:autofill:focus {
+  -webkit-box-shadow:
+    0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset,
+    0 0 20px -3px var(--color-accent);
+  box-shadow:
+    0 0 0px 1000px color-mix(in srgb, var(--color-bg-base) 55%, var(--color-bg-surface) 45%) inset,
+    0 0 20px -3px var(--color-accent);
+}
+
 * {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -216,6 +274,35 @@ textarea,
 
 @media (prefers-reduced-motion: reduce) {
   .hex-trace {
+    animation: none;
+  }
+}
+
+/* Contact page icon — same SVG stroke-dash "flowing border" technique as
+   the hexagon badges above, traced along the exact same rect *and stroke
+   width* as lucide's own Mail glyph (x:2 y:4 w:20 h:16 rx:2 in its 24x24
+   viewBox) — the line itself is fully covered by the icon's own stroke
+   (painted on top), leaving only this drop-shadow's blur visible as a soft
+   glow poking out on the outside/inside as it travels (see
+   ContactPage.tsx). (A thicker stroke, letting a visible sliver of the
+   line itself peek out, and a gradient-filled dot via <animateMotion> were
+   both tried first — reverted, preferred glow-only.) */
+.mail-trace {
+  /* Path perimeter (w:20 h:16 rx:2) is ~69 units total; 35 visible = half
+     the loop. */
+  stroke-dasharray: 35 34;
+  filter: drop-shadow(0 0 3px var(--color-accent));
+  animation: mail-trace-dash 7s linear infinite;
+}
+
+@keyframes mail-trace-dash {
+  to {
+    stroke-dashoffset: -69;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mail-trace {
     animation: none;
   }
 }

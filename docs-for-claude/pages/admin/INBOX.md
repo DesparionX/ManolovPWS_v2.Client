@@ -1,16 +1,16 @@
 # Admin: Inbox Page
 
-Route: `/admin/inbox` (per `admin-layout.md`). Owner-only view of all contact messages.
+Route: `/admin/inbox` (per `admin-layout.md`). Owner-only list of all contact messages. Full message content lives on its own route — see `MESSAGE-DETAIL.md`.
 
 ## Purpose
 
-View, read, and delete messages sent via the public Contact page. No replies, no editing — matches the backend's deliberately minimal Message model.
+List, open (read), and delete messages sent via the public Contact page. No replies, no editing — matches the backend's deliberately minimal Message model.
 
 ## Data / API
 
 - `GET /Inbox/messages` (protected) — returns `MessageReadModel[]`, the full list
-- `PUT /Inbox/messages/{id}` (protected) — no request body; marks the message as read server-side, returns the updated `MessageReadModel`
 - `DELETE /Inbox/messages/{id}` (protected) — removes the message, requires confirmation (same pattern as `admin/posts.md`/`admin/projects.md`)
+- `PUT /Inbox/messages/{id}` (marking as read) is **not** called from this page — it fires from `MESSAGE-DETAIL.md`'s page instead, the moment a message is actually opened
 
 `MessageReadModel` shape (confirmed via `openapi.json`):
 
@@ -30,27 +30,33 @@ interface MessageReadModel {
 ## Functionality & Interactions
 
 - List sorted by `sentDate`, newest first (same convention as `admin/posts.md`/`admin/projects.md`)
-- **Row summary (collapsed):** sender name, title, a short preview of `context` (line-clamped, same pattern as Home's post preview), sent date, and a visual unread indicator (e.g. bold text or a dot) when `isUnread` is true
-- **Expand-in-place on click** (not a separate route/detail page) — reuses the same "list editor" interaction pattern established in `admin/profile.md`'s array sections: click a row, it expands to show full details inline. No navigation, no new route needed for a feature this simple.
-- **Marking as read:** the moment a message is opened (expanded), fire `PUT /Inbox/messages/{id}` immediately — no separate "mark as read" button. Only fire it if the message is currently unread (mirrors the backend handler's own idempotency guard — no need to re-call this on every re-open of an already-read message).
-- **Delete:** requires confirmation before calling `DELETE /Inbox/messages/{id}`, same pattern as every other delete action in the admin panel
-- **Expanded view shows `senderMetadata`** (IP address, User-Agent) — useful for spotting spam/abuse patterns, deliberately not hidden
+- **Table/list view, same borderless-list-with-divider pattern as `admin/posts.md`/`admin/projects.md`** — a row shows only the message **title** and, next to it, **who it's from** (`senderName`), plus a visual unread indicator (a dot) when `isUnread` is true. No preview text, no date, no sender email in the row — those live on the detail page only.
+- **The whole row is clickable** — same action as the Read icon (navigates to `/admin/inbox/{id}`, see `MESSAGE-DETAIL.md`). Unlike Posts/Projects (where the row itself isn't clickable, only its hover-revealed action icons are), Inbox rows have no other purpose than opening the message, so the entire row acts as the Read action rather than requiring a precise click on a small icon.
+- **Per-row actions (hover-revealed, matching Posts/Projects exactly):**
+  - **Read** (`Eye` icon) — same navigation as clicking the row itself; kept as an explicit icon too (not just the row) for clarity and for touch devices, where hover-revealed-only affordances are awkward. Its click handler calls `stopPropagation()` so it doesn't double-fire the row's own click. Does not itself call any endpoint — marking as read happens on the detail page.
+  - **Delete** (`Trash2` icon) — opens `ConfirmDialog`; on confirm, calls `DELETE /Inbox/messages/{id}`. Also calls `stopPropagation()`, so clicking Delete doesn't also trigger the row's navigate-to-Read behavior.
+- **No expand-in-place.** An earlier version expanded a row inline to show full details (reusing `admin/profile.md`'s array-tab interaction pattern). Replaced with a real route per Owner feedback — reads more consistently with how Posts/Projects work, and gives a message its own shareable/bookmarkable/back-navigable URL.
 - **Unread count / badge:** computed client-side from the already-fetched list (`messages.filter(m => m.isUnread).length`) — no separate count endpoint needed. This same computed value drives **two** UI locations that must stay in sync:
   1. The Inbox item in `admin-layout.md`'s inner nav
   2. The icon near the logout button in the main app Header (`STRUCTURE.md`'s `shared/layout`)
 
-  Both should read from the **same shared TanStack Query cache entry** (same query key) rather than each fetching independently — this keeps them trivially consistent and avoids duplicate network requests. The Header's query should only run when `authStore.isAuthenticated()` is true (per `AUTH.md`) — no point calling a protected endpoint while signed out.
+  Both should read from the **same shared TanStack Query cache entry** (same query key) rather than each fetching independently — this keeps them trivially consistent and avoids duplicate network requests. The Header's query should only run when `authStore.isAuthenticated()` is true (per `AUTH.md`) — no point calling a protected endpoint while signed out. This cache entry gets invalidated (kept fresh) globally whenever `MESSAGE-DETAIL.md`'s page reads a message — see that doc's Functionality section for the mechanism.
 
 ## Design / Visual Notes
 
-- Same borderless-list-with-divider styling established in `admin/posts.md`/`admin/projects.md`, for visual consistency
-- Unread messages visually distinguished from read ones (bold, a colored dot, or similar) — exact treatment TBD alongside `THEME.md`
-- Expanded message view: sender name/email, title, full context (with line breaks preserved, same rendering approach as `contact.md`), sent date, sender metadata (IP/User-Agent), delete action
+- Same borderless-list-with-divider styling established in `admin/posts.md`/`admin/projects.md`, for visual consistency — row actions fade in on hover (`opacity-0 group-hover:opacity-100`), same as those pages
+- Unread messages: a small solid accent dot to the left of the row, plus bolder title text
+- No "New" action — unlike Posts/Projects, messages aren't created by the Owner, only received
+
+## Implementation Notes
+
+- **`features/inbox/api/useMessages.ts`** is the single hook this page, `AdminLayout.tsx`'s nav badge, and `shared/layout/Header.tsx`'s sign-out-area badge all call — same query key (`queryKeys.inbox.all`), so every location always agrees without extra fetches. The hook gates on `authStore.isAuthenticated()` via `useSyncExternalStore` (reactive, not a one-time check) since `Header` renders on every route, including signed-out public pages, and `/Inbox/messages` is protected. **`MESSAGE-DETAIL.md`'s page does *not* use this hook** — it fetches its own data via its own query (`useReadMessage`, keyed by id), by explicit design rather than reading from this list's cache.
+- Row structure/action styling copied directly from `PostsPage.tsx`'s row markup (`group`, hover-revealed action buttons, `divide-y divide-border-default`) rather than reusing `ListEditor` — that component is built around editable array items with add/save/validate, which never fit Inbox's read-only list/delete flow even before the detail route existed.
 
 ## Edge Cases
 
 - No messages at all — empty state, consistent with the empty-state pattern used in `admin/posts.md`/`admin/projects.md`
-- Deleting a currently-expanded message — collapse/remove it from view immediately after confirmed deletion, don't leave a stale expanded panel referencing a now-deleted message
+- Deleting a message currently open on its detail page (e.g. two tabs, or deleted then browser back) — see `MESSAGE-DETAIL.md`'s Edge Cases
 
 ## Open Questions / Ask Before Assuming
 

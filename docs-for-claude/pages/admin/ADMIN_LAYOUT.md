@@ -12,6 +12,7 @@ Owner-only management area. Persistent inner navigation on the left, page conten
 - `/admin/posts` — own doc: `posts.md`
 - `/admin/projects` — own doc: `projects.md`
 - `/admin/inbox` — own doc: `inbox.md`
+- `/admin/inbox/:id` — a single message's full content, own doc: `MESSAGE-DETAIL.md`. Doesn't appear in the inner nav (only reached via a Read action on the Inbox list), but is still a real nested route under this same protected layout.
 
 All are real, bookmarkable, protected nested routes — not client-side tab state.
 
@@ -41,6 +42,7 @@ All are real, bookmarkable, protected nested routes — not client-side tab stat
 - `docs-for-claude/pages/admin/posts.md`
 - `docs-for-claude/pages/admin/projects.md`
 - `docs-for-claude/pages/admin/inbox.md`
+- `docs-for-claude/pages/admin/MESSAGE-DETAIL.md`
 - `docs-for-claude/pages/sign-in.md` — not a child of this layout (see Routes exception above), listed for cross-reference since it's the entry point into `/admin`
 
 ## Open Questions / Ask Before Assuming

@@ -26,10 +26,6 @@ export function ProjectsPage() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-xl flex-col">
-      <h1 className="mb-6 text-center text-xl font-semibold text-text-primary">
-        All Projects
-      </h1>
-
       <div className="flex-1">
         {sorted.length === 0 ? (
           <p className="text-center text-text-secondary">No projects yet.</p>

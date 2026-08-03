@@ -22,10 +22,6 @@ export function PostsPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <h1 className="mb-6 text-center text-xl font-semibold text-text-primary">
-        All Posts
-      </h1>
-
       <div className="flex-1">
         {sorted.length === 0 ? (
           <p className="text-text-secondary">No posts yet.</p>

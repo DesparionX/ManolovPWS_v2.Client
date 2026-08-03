@@ -14,4 +14,8 @@ export const queryKeys = {
   users: {
     detail: (id: string) => ["users", id] as const,
   },
+  inbox: {
+    all: ["inbox", "messages"] as const,
+    detail: (id: string) => ["inbox", "message", id] as const,
+  },
 };

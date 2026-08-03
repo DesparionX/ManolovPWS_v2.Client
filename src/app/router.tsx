@@ -16,6 +16,7 @@ import { PostEditorPage } from '../pages/admin/PostEditorPage'
 import { ProjectsPage as AdminProjectsPage } from '../pages/admin/ProjectsPage'
 import { ProjectEditorPage } from '../pages/admin/ProjectEditorPage'
 import { InboxPage } from '../pages/admin/InboxPage'
+import { MessageDetailPage } from '../pages/admin/MessageDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
                   { path: 'projects/new', element: <ProjectEditorPage /> },
                   { path: 'projects/:id', element: <ProjectEditorPage /> },
                   { path: 'inbox', element: <InboxPage /> },
+                  { path: 'inbox/:id', element: <MessageDetailPage /> },
                 ],
               },
             ],

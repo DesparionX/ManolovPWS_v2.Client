@@ -1,7 +1,9 @@
 import { useRef, useSyncExternalStore } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Inbox as InboxIcon } from "lucide-react";
 import { authStore } from "../auth/authStore";
 import { useSignOut } from "../../features/auth";
+import { useMessages } from "../../features/inbox";
 import { Nav } from "./Nav";
 import { MobileNav } from "./MobileNav";
 import { Button } from "../components/Button";
@@ -17,6 +19,8 @@ export function Header() {
   );
   const signOut = useSignOut();
   const lastTapRef = useRef(0);
+  const { data: messages } = useMessages();
+  const unreadCount = messages?.filter((m) => m.isUnread).length ?? 0;
 
   function goToAdminEntry() {
     navigate(isAuthenticated ? "/admin" : "/admin/auth");
@@ -53,6 +57,20 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <Nav />
+          {isAuthenticated && (
+            <Link
+              to="/admin/inbox"
+              aria-label="Inbox"
+              className="relative rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-accent"
+            >
+              <InboxIcon className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-bg-base">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+          )}
           {isAuthenticated && (
             <Button
               type="button"

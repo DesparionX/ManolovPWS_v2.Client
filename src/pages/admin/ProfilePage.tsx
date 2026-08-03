@@ -56,9 +56,6 @@ export function ProfilePage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-center text-xl font-semibold text-text-primary">
-        Profile
-      </h1>
       <div className="mb-6 flex items-center gap-2 overflow-x-auto border-b border-border-default pb-4">
         {TABS.map((tab) => (
           <button

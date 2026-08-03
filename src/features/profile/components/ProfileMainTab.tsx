@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { useState, type FocusEvent } from "react";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { Mars, Venus } from "lucide-react";
 import { FloatingInput } from "../../../shared/components/FloatingInput";
 import { DatePicker } from "../../../shared/components/DatePicker";
 import { ImageUpload } from "../../../shared/components/ImageUpload";
+import { AutoGrowTextarea } from "../../../shared/components/AutoGrowTextarea";
 import {
   useUpdateName,
   useUpdateAddress,
@@ -40,47 +41,6 @@ function EditToggleButton({
     >
       {editable ? "Preview" : "Edit"}
     </button>
-  );
-}
-
-function AutoGrowTextarea({
-  value,
-  onChange,
-  onBlur,
-  error,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  onBlur: () => void;
-  error?: string;
-}) {
-  const ref = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  }, [value]);
-
-  return (
-    <div>
-      <label htmlFor="summary" className="mb-1 block text-sm text-text-secondary">
-        Summary
-      </label>
-      <textarea
-        ref={ref}
-        id="summary"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onBlur={onBlur}
-        rows={3}
-        className={`w-full resize-none rounded-lg border bg-bg-base/50 px-3 py-2 text-text-primary transition-colors duration-300 focus:outline-none ${
-          error ? "border-danger" : "border-border-default focus:border-accent"
-        }`}
-      />
-      {error && <p className="mt-2 max-w-[92%] text-sm text-danger">{error}</p>}
-    </div>
   );
 }
 
@@ -362,8 +322,10 @@ export function ProfileMainTab({
         </div>
       </div>
 
-      <div onBlur={handleNameGroupBlur} className="rounded-xl border border-border-default p-4">
-        <p className="mb-4 text-sm font-semibold text-text-primary">Name</p>
+      <div onBlur={handleNameGroupBlur} className="relative rounded-xl border border-border-default px-4 pt-10 pb-6">
+        <span className="pointer-events-none absolute top-0 left-[10%] -translate-y-1/2 text-lg font-semibold text-text-secondary [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)]">
+          Name
+        </span>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <FloatingInput id="firstName" label="First Name" value={name.firstName} error={errors.firstName} onChange={(e) => setName({ ...name, firstName: e.target.value })} />
           <FloatingInput id="middleName" label="Middle Name" value={name.middleName} error={errors.middleName} onChange={(e) => setName({ ...name, middleName: e.target.value })} />
@@ -389,8 +351,10 @@ export function ProfileMainTab({
         </div>
       </div>
 
-      <div onBlur={handleAddressGroupBlur} className="rounded-xl border border-border-default p-4">
-        <p className="mb-4 text-sm font-semibold text-text-primary">Address</p>
+      <div onBlur={handleAddressGroupBlur} className="relative rounded-xl border border-border-default px-4 pt-10 pb-6">
+        <span className="pointer-events-none absolute top-0 left-[10%] -translate-y-1/2 text-lg font-semibold text-text-secondary [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)]">
+          Address
+        </span>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <FloatingInput id="country" label="Country" value={address.country} error={errors.country} onChange={(e) => setAddress({ ...address, country: e.target.value })} />
           <FloatingInput id="region" label="Region" value={address.region} error={errors.region} onChange={(e) => setAddress({ ...address, region: e.target.value })} />
@@ -402,8 +366,10 @@ export function ProfileMainTab({
       </div>
 
       <AutoGrowTextarea
+        id="summary"
+        label="Summary"
         value={summary}
-        onChange={setSummary}
+        onChange={(e) => setSummary(e.target.value)}
         onBlur={handleSummaryBlur}
         error={errors.summary}
       />

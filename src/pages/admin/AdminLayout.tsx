@@ -9,6 +9,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Container } from "../../shared/components/Container";
+import { useMessages } from "../../features/inbox";
 
 const ADMIN_NAV_LINKS = [
   { to: "/admin/profile", label: "Profile", icon: User },
@@ -27,6 +28,8 @@ function isNavItemActive(pathname: string, to: string) {
 export function AdminLayout() {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { data: messages } = useMessages();
+  const unreadCount = messages?.filter((m) => m.isUnread).length ?? 0;
 
   return (
     <Container className="flex flex-1 flex-col">
@@ -51,6 +54,7 @@ export function AdminLayout() {
           {ADMIN_NAV_LINKS.map((link) => {
             const active = isNavItemActive(pathname, link.to);
             const Icon = link.icon;
+            const showBadge = link.to === "/admin/inbox" && unreadCount > 0;
             return (
               <Link
                 key={link.to}
@@ -62,7 +66,14 @@ export function AdminLayout() {
                     : "text-text-secondary hover:text-text-primary"
                 } ${collapsed ? "md:justify-center" : ""}`}
               >
-                <Icon className="h-5 w-5 shrink-0" />
+                <span className="relative shrink-0">
+                  <Icon className="h-5 w-5" />
+                  {showBadge && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-bg-base">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </span>
                 <span className={collapsed ? "md:hidden" : ""}>
                   {link.label}
                 </span>
