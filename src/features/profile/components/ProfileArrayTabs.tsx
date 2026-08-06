@@ -31,6 +31,16 @@ function endNotBeforeStart(start: string, end: string | null): boolean {
   return end >= start;
 }
 
+// Mobile: just "End Date" — the fuller explanation overflows a narrow
+// field's label (see THEME.md's `whitespace-nowrap` note) once it can no
+// longer wrap to fit. Desktop keeps the fuller explanatory text, unchanged.
+const END_DATE_LABEL = (
+  <>
+    <span className="md:hidden">End Date</span>
+    <span className="hidden md:inline">End Date (leave empty if ongoing)</span>
+  </>
+);
+
 // --- Education ---
 
 const emptyEducation: EducationDto = {
@@ -113,7 +123,7 @@ export function EducationTab({
             maxDate={new Date()}
           />
           <DatePicker
-            label="End Date (leave empty if ongoing)"
+            label={END_DATE_LABEL}
             value={item.endDate}
             onChange={(v) => onChange({ ...item, endDate: v })}
           />
@@ -196,7 +206,7 @@ export function ExperienceTab({
             maxDate={new Date()}
           />
           <DatePicker
-            label="End Date (leave empty if ongoing)"
+            label={END_DATE_LABEL}
             value={item.endDate}
             onChange={(v) => onChange({ ...item, endDate: v })}
           />

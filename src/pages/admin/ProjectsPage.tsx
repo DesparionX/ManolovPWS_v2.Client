@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import {
@@ -8,12 +8,17 @@ import {
   PROJECT_STATE_BADGE_CLASSES,
 } from "../../features/projects";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
+import {
+  useLongPressReveal,
+  LONG_PRESS_ROW_ATTR,
+} from "../../shared/hooks/useLongPressReveal";
 
 export function ProjectsPage() {
   const navigate = useNavigate();
   const { data: projects, isLoading, isError } = useProjects();
   const deleteProject = useDeleteProject();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const { revealedId, onTouchStart, onTouchEnd, consumeLongPress } = useLongPressReveal();
 
   if (isLoading) return <p className="text-text-secondary">Loading projects...</p>;
   if (isError || !projects) {
@@ -30,40 +35,68 @@ export function ProjectsPage() {
         {sorted.length === 0 ? (
           <p className="text-center text-text-secondary">No projects yet.</p>
         ) : (
-          <div className="divide-y divide-border-default">
-            {sorted.map((project) => (
-              <div
-                key={project.id}
-                className="group grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg py-3 px-2 transition-colors duration-300 hover:bg-bg-surface/80"
-              >
-                <div />
-                <div className="flex min-w-0 items-center justify-center gap-3">
-                  <p className="truncate text-text-primary">{project.name}</p>
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${PROJECT_STATE_BADGE_CLASSES[project.state]}`}
+          <div>
+            {sorted.map((project, index) => (
+              <Fragment key={project.id}>
+                {index > 0 && <div className="mx-auto h-px w-4/5 bg-border-default" />}
+                <div
+                  {...{ [LONG_PRESS_ROW_ATTR]: project.id }}
+                  onClick={() => {
+                    if (consumeLongPress()) return;
+                    navigate(`/admin/projects/${project.id}`);
+                  }}
+                  onTouchStart={() => onTouchStart(project.id)}
+                  onTouchEnd={onTouchEnd}
+                  onTouchMove={onTouchEnd}
+                  className="group grid cursor-pointer grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg px-2 py-3 transition-colors duration-300 select-none hover:bg-bg-surface/80"
+                >
+                  <div />
+                  <div className="flex min-w-0 items-center justify-center gap-3">
+                    <p className="truncate text-text-primary">{project.name}</p>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${PROJECT_STATE_BADGE_CLASSES[project.state]}`}
+                    >
+                      {PROJECT_STATE_LABELS[project.state]}
+                    </span>
+                  </div>
+                  <div
+                    className={`flex shrink-0 justify-end gap-1 transition-opacity duration-300 group-hover:opacity-100 ${
+                      revealedId === project.id ? "opacity-100" : "opacity-0"
+                    }`}
                   >
-                    {PROJECT_STATE_LABELS[project.state]}
-                  </span>
+                    <button
+                      type="button"
+                      aria-label="Edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/admin/projects/${project.id}`);
+                      }}
+                      className={`rounded-lg p-2 transition-colors duration-300 ${
+                        revealedId === project.id
+                          ? "text-accent"
+                          : "text-text-secondary hover:text-accent"
+                      }`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Delete"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteId(project.id);
+                      }}
+                      className={`rounded-lg p-2 transition-colors duration-300 ${
+                        revealedId === project.id
+                          ? "text-danger"
+                          : "text-text-secondary hover:text-danger"
+                      }`}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex shrink-0 justify-end gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <button
-                    type="button"
-                    aria-label="Edit"
-                    onClick={() => navigate(`/admin/projects/${project.id}`)}
-                    className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-accent"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Delete"
-                    onClick={() => setDeleteId(project.id)}
-                    className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-danger"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
+              </Fragment>
             ))}
           </div>
         )}

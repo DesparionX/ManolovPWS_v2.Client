@@ -26,13 +26,78 @@ const CREDENTIALED_PATHS = [
 // redirect-home flow below, which is only meaningful for protected calls.
 const SESSION_INDEPENDENT_PATHS = ["/Auth/sign-in", "/Auth/register"];
 
+// The backend (Railway) sleeps after inactivity and cold-starts on the next
+// request — the container can take several seconds to actually start
+// accepting connections. During that window a request either hangs (native
+// fetch has no timeout of its own; left alone it waits on the OS's own TCP
+// timeout, commonly minutes, with no feedback and no recovery) or Railway's
+// own edge proxy fails it early with a 502/503/504 before the app is up.
+// `fetchWithRetry` below wraps every request in a bounded per-attempt
+// timeout plus a couple of retries, so a cold backend self-heals into a
+// normal response instead of hanging indefinitely or failing once on a
+// timeout guess that just wasn't quite long enough.
+//
+// Chosen over just raising a single attempt's timeout very high: one long
+// wait has no recovery path if that guess is still too short, while a few
+// bounded attempts adapt to whatever the actual cold-start duration turns
+// out to be. An already-warm backend is unaffected either way — the first
+// attempt succeeds immediately, same as before this existed.
+//
+// Safe to apply to every request, mutations (POST/PUT/DELETE) included, not
+// just queries — unlike the "don't auto-retry writes, some aren't
+// idempotent" concern behind `mutations: { retry: 0 }` in queryClient.ts,
+// these retries only ever fire when the app never received/processed the
+// request in the first place (a timeout, a dropped connection, or a
+// 502/503/504 from the proxy standing in front of a container that isn't
+// listening yet). There's nothing server-side to duplicate. That's a
+// fundamentally different, much narrower case than "the app processed the
+// write but the response was lost on the way back" — which is the real
+// risk non-idempotent retries run, and stays disabled exactly as before.
+const REQUEST_TIMEOUT_MS = 15_000;
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 2_000;
+
+// Statuses a reverse proxy (Railway's edge) returns when it can't yet reach
+// the app container — not something the app itself produced. Any other
+// status means the app actually responded, so retrying it wouldn't change a
+// real 404/422/500 the running app returned on purpose.
+const GATEWAY_RETRYABLE_STATUSES = new Set([502, 503, 504]);
+
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const isLastAttempt = attempt === MAX_ATTEMPTS;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const response = await fetch(url, { ...init, signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (GATEWAY_RETRYABLE_STATUSES.has(response.status) && !isLastAttempt) {
+        await sleep(RETRY_DELAY_MS);
+        continue;
+      }
+      return response;
+    } catch (err) {
+      clearTimeout(timeoutId);
+      lastError = err;
+      if (isLastAttempt) break;
+      await sleep(RETRY_DELAY_MS);
+    }
+  }
+  throw lastError;
+}
+
 let refreshPromise: Promise<boolean> | null = null;
 
 export async function refreshAccessToken(): Promise<boolean> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       try {
-        const response = await fetch(`${BASE_URL}/Auth/refresh-token`, {
+        const response = await fetchWithRetry(`${BASE_URL}/Auth/refresh-token`, {
           method: "POST",
           credentials: "include",
         });
@@ -140,11 +205,42 @@ export async function apiFetch<T>(
     headers.set("Authorization", `Bearer ${accessToken}`);
   }
 
-  const response = await fetch(`${BASE_URL}${path}`, {
-    ...init,
-    headers,
-    credentials: isCredentialed ? "include" : init.credentials,
-  });
+  let response: Response;
+  try {
+    response = await fetchWithRetry(`${BASE_URL}${path}`, {
+      ...init,
+      headers,
+      credentials: isCredentialed ? "include" : init.credentials,
+    });
+  } catch {
+    // Every attempt timed out or failed at the network level — never got a
+    // real response from the server at all (as opposed to the server
+    // responding with a real error status, handled below). Thrown as a real
+    // ApiError, not the raw AbortError/TypeError fetchWithRetry caught —
+    // anything else silently passes through every error handler unrecognized
+    // (checks `instanceof ApiError`), the same "saves but nothing tells you"
+    // class of bug `parseErrors` above already had to be hardened against.
+    throw new ApiError(0, [
+      {
+        code: "server_unreachable",
+        message: "Couldn't reach the server. Please try again in a moment.",
+      },
+    ]);
+  }
+
+  if (GATEWAY_RETRYABLE_STATUSES.has(response.status)) {
+    // Still 502/503/504 after every retry — the backend never came up in
+    // time. A real Response exists here (unlike the network-failure case
+    // above), but its body is Railway's own proxy error page, not our
+    // ErrorDto[] shape, so parseErrors' generic fallback wouldn't read as
+    // meaningful — a dedicated message instead.
+    throw new ApiError(response.status, [
+      {
+        code: "server_unavailable",
+        message: "The server is starting up. Please try again in a moment.",
+      },
+    ]);
+  }
 
   if (
     response.status === 401 &&

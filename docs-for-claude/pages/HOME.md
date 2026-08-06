@@ -37,9 +37,10 @@ interface PostReadModel {
 
 - Layout: Facebook-feed style, compact cards, endless scroll (see above)
 - Visible per-post: title, published date, thumb (if present), and a preview of `context`
-  - Context preview: clamp to ~3 lines (use CSS `-webkit-line-clamp` / `line-clamp` rather than a character-count substring — this stays correct regardless of content length or formatting, which matters once `context` becomes rich text — see Future Considerations)
+  - Context preview: clamp to ~3 lines (use CSS `-webkit-line-clamp` / `line-clamp` rather than a character-count substring — this stays correct regardless of content length or formatting, which matters once `context` becomes rich text — see Future Considerations). **Renders the real HTML (`dangerouslySetInnerHTML`), not stripped-to-text** — `line-clamp-3` only visually hides overflow (`-webkit-line-clamp` never touches the DOM/HTML string), so clamping actual rendered markup is exactly as safe as clamping plain text, and the preview no longer silently drops bullet lists/headings the Owner authored. Same styling hooks as the detail pages' rich-text blocks (`[&_h2]:...`/`[&_ol]:...`/`[&_ul]:...`, see `POST-DETAIL.md`).
 - Card styling: blurred background, thin greyish border that colorizes on hover
 - Pinned posts: same style, but thicker colorized border (always-on, not just hover) to visually distinguish from regular posts
+- **Card header layout (`PostCard.tsx`), applies to both mobile and desktop:** title centered, published date directly below it (also centered) — not down at the bottom of the card with the actions. Pin badge (when pinned) sits absolutely positioned top-left; the Share button mirrors it top-right, in that same header row/block rather than down in the action row. Below the thumb/context preview, only the "View post" button remains in the action area, and it's centered (`flex justify-center`) now that Share isn't sharing that row with it anymore.
 - Loading state: animated skeleton cards, filling the full viewport height (not a fixed count — however many fit)
 
 ## Edge Cases
@@ -53,5 +54,6 @@ interface PostReadModel {
 
 ## Future Considerations (not building now, but affects current decisions)
 
-- **Update:** `context` is now confirmed as TipTap-authored HTML (built alongside the admin Post Editor), not plain text — the note above about "eventually rich text" already happened. The 3-line card preview strips tags to plain text first (`shared/components/richTextUtils.ts`'s `stripHtmlToText`) and then applies CSS `line-clamp-3` to that text — matches the original decision to use line-clamp over substring counting, just confirmed against real HTML content now instead of a future hypothetical.
+- **Update:** `context` is now confirmed as TipTap-authored HTML (built alongside the admin Post Editor), not plain text — the note above about "eventually rich text" already happened.
+- **Reversed: the 3-line card preview no longer strips tags to plain text first.** The original approach ran content through `stripHtmlToText` before clamping, on the assumption that showing literal `<p>`/`<ul>` tags as text would look broken — reasonable-sounding, but wrong in practice: it silently threw away real bullet lists/formatting the Owner authored, and turned out to be an unnecessary precaution anyway, since `line-clamp-3` only visually hides overflow rather than truncating the underlying HTML string (nothing about rendering real markup risked a malformed cut mid-tag). `stripHtmlToText` was deleted from `richTextUtils.ts` once nothing referenced it — `PostCard`/`ProjectCard` render `post.context`/`project.description` directly via `dangerouslySetInnerHTML`, same as the detail pages.
 - If `GET /Posts` gains real backend pagination, this page's "load everything, fake scroll client-side" approach will need to be replaced with real incremental fetching.

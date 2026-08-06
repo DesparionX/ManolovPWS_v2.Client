@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Pin, Share2 } from "lucide-react";
-import { stripHtmlToText } from "../../../shared/components/richTextUtils";
 import { notificationController } from "../../../shared/notifications/notificationController";
 import type { PostReadModel } from "../types/postTypes";
 
@@ -26,16 +25,27 @@ export function PostCard({ post }: PostCardProps) {
       }
     >
       <article className="overflow-hidden rounded-xl border border-border-default/50 bg-bg-surface/60 shadow-md backdrop-blur-md">
-        <div className="relative flex items-center justify-center px-5 pt-5 pb-3">
+        <div className="relative flex flex-col items-center px-5 pt-5 pb-3">
           {post.isPinned && (
             <Pin
-              className="absolute left-5 h-5 w-5 rotate-45 text-accent"
+              className="absolute top-5 left-5 h-5 w-5 rotate-45 text-accent"
               aria-label="Pinned"
             />
           )}
+          <button
+            type="button"
+            aria-label="Share"
+            onClick={handleShare}
+            className="absolute top-4 right-4 rounded-lg p-1 text-text-secondary transition-colors duration-300 hover:text-accent"
+          >
+            <Share2 className="h-4 w-4" />
+          </button>
           <h2 className="text-center text-lg font-semibold text-text-primary">
             {post.title}
           </h2>
+          <p className="mt-1 text-center text-xs text-text-secondary">
+            {post.publishedDate}
+          </p>
         </div>
 
         {post.thumb && (
@@ -43,28 +53,23 @@ export function PostCard({ post }: PostCardProps) {
         )}
 
         <div className="p-5">
-          <p className="line-clamp-3 text-sm text-text-secondary">
-            {stripHtmlToText(post.context)}
-          </p>
-          <div className="mt-4 flex items-center gap-3">
+          {/* Real HTML, same convention as the Post/Project detail pages —
+              line-clamp-3 only visually hides overflow (webkit-line-clamp
+              doesn't touch the DOM), so it's safe to clamp actual rendered
+              markup instead of the plain-text-stripped preview this used to
+              show. */}
+          <div
+            className="line-clamp-3 text-sm text-text-secondary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+            dangerouslySetInnerHTML={{ __html: post.context }}
+          />
+          <div className="mt-4 flex justify-center">
             <Link
               to={`/posts/${post.id}`}
               className="rounded-lg border border-border-default px-4 py-2 text-sm text-text-primary transition-colors duration-300 hover:border-accent"
             >
               View post
             </Link>
-            <button
-              type="button"
-              aria-label="Share"
-              onClick={handleShare}
-              className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-accent"
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
           </div>
-          <p className="mt-4 text-center text-xs text-text-secondary">
-            {post.publishedDate}
-          </p>
         </div>
       </article>
     </div>

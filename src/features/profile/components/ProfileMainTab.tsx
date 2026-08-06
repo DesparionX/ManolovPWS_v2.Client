@@ -1,6 +1,6 @@
 import { useState, type FocusEvent } from "react";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import { Mars, Venus } from "lucide-react";
+import { Mars, Venus, Pencil, Eye } from "lucide-react";
 import { FloatingInput } from "../../../shared/components/FloatingInput";
 import { DatePicker } from "../../../shared/components/DatePicker";
 import { ImageUpload } from "../../../shared/components/ImageUpload";
@@ -33,13 +33,18 @@ function EditToggleButton({
   editable: boolean;
   onToggleEditable: () => void;
 }) {
+  const Icon = editable ? Eye : Pencil;
   return (
     <button
       type="button"
       onClick={onToggleEditable}
-      className="rounded-lg border border-border-default px-4 py-2 text-sm text-text-primary transition-colors duration-300 hover:border-accent"
+      aria-label={editable ? "Preview" : "Edit"}
+      className="rounded-lg border border-border-default p-2 text-text-primary transition-colors duration-300 hover:border-accent md:px-4 md:py-2 md:text-sm"
     >
-      {editable ? "Preview" : "Edit"}
+      {/* Mobile: icon only. Desktop (md+): text only, unchanged from
+          before. */}
+      <Icon className="h-4 w-4 md:hidden" />
+      <span className="hidden md:inline">{editable ? "Preview" : "Edit"}</span>
     </button>
   );
 }
@@ -347,7 +352,7 @@ export function ProfileMainTab({
           <FloatingInput id="email" label="Email" value={email} error={errors.email} onChange={(e) => setEmail(e.target.value)} onBlur={handleEmailBlur} />
         </div>
         <div className="w-full max-w-xs">
-          <FloatingInput id="phoneNumber" label="Phone Number" value={phone} error={errors.phoneNumber} onChange={(e) => setPhone(e.target.value)} onBlur={handlePhoneBlur} />
+          <FloatingInput id="phoneNumber" label="Phone Number" type="tel" inputMode="tel" value={phone} error={errors.phoneNumber} onChange={(e) => setPhone(e.target.value)} onBlur={handlePhoneBlur} />
         </div>
       </div>
 

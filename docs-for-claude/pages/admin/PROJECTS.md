@@ -21,6 +21,9 @@ Owner-only listing of every project, sorted newest-first, with quick access to e
 - **Hover on a row** reveals two icon actions: Edit, Delete (no Pin — projects don't have that field)
 - **Delete:** requires a confirmation step before calling `DELETE /Projects/{id}` (same pattern as Posts and Profile array items)
 - **Edit:** navigates to the Project Editor route with the project's `id`
+- **The whole row is clickable, same action as Edit** — added since mobile has no hover, so hover-revealed icons alone would be effectively unreachable there. Delete calls `stopPropagation()` on its own click so tapping it doesn't also trigger the row's navigate-to-Edit.
+- **Mobile: row actions also reveal on press-and-hold, and stay revealed after releasing** — `shared/hooks/useLongPressReveal.ts` (shared with Posts/Inbox/Profile's array-tab lists), not plain CSS `:active` (which would revert the instant a finger lifts, before there's time to actually reach Edit/Delete). The row also gets `select-none` so the hold doesn't trigger the native text-selection callout, and once revealed the icons take their eventual hover colors (accent/danger) immediately rather than staying secondary-gray — there's no hover-then-preview-color step on a touchscreen.
+- **Tapping anywhere outside the revealed row dismisses it** — see `posts.md`'s equivalent bullet for the mechanism (`data-long-press-id` + a document-level `pointerdown` listener in `useLongPressReveal.ts`); same behavior here.
 - **"+" button:** fixed at the bottom of the table, navigates to the Project Editor route in create mode
 - After a successful delete, the table should reflect the change without a full page reload
 
@@ -29,7 +32,7 @@ Owner-only listing of every project, sorted newest-first, with quick access to e
 - **Confirmed:** each row shows a small `state` badge/tag (Finished / InDevelopment / Frozen / Abandoned) alongside the project name, since name-only would otherwise hide this useful info entirely
 - **Finalized:** the state badge is a solid-tint pill (`bg-{color}/15 text-{color}`) using the real per-state color mapping from `THEME.md`'s Project State Colors section (`PROJECT_STATE_BADGE_CLASSES` in `features/projects/types/projectTypes.ts`) — `Finished` → `success` green, `InDevelopment` → `accent` cyan, `Frozen` → `frozen` indigo, `Abandoned` → `danger` red. This replaces the earlier placeholder (`STATE_HOVER_CLASS`, a hover-only left-border tint using only pre-existing tokens) now that real per-state colors were decided — the hover-tint mechanism itself was removed in favor of the always-visible colored badge, which communicates state at a glance without requiring a hover.
 - **List is centered**, not full-width: wrapped in a `mx-auto max-w-xl` column (same "centered narrow column" convention as the Post/Project Editor forms), and each row's content (name + badge, then the Edit/Delete icons) is horizontally centered within that column rather than spread edge-to-edge with `justify-between`.
-- Same borderless-table-with-divider styling as `admin/posts.md`, for visual consistency across both admin list pages
+- Same borderless-table-with-divider styling as `admin/posts.md`, for visual consistency across both admin list pages. **The divider between rows is shorter than the row itself** (`w-4/5`, centered via `mx-auto`) rather than a full-bleed `divide-y` border — a manually-rendered `<div>` between rows (`Fragment`-wrapped `.map()`, one per gap, none before the first or after the last) instead of a wrapper-level `divide-y` utility, since `divide-y` always spans the full container width with no way to inset it.
 - Hover reveals Edit/Delete icons only (two, not three — no pin state to show)
 
 ## Edge Cases

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   format,
   parseISO,
@@ -20,7 +20,7 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-reac
 import { Select } from "./Select";
 
 interface DatePickerProps {
-  label: string;
+  label: ReactNode;
   value: string | null;
   onChange: (value: string) => void;
   minDate?: Date;
@@ -97,7 +97,7 @@ export function DatePicker({
           (faux-stroke) occlude the border line showing through letter
           gaps, same as FloatingInput. */}
       <span
-        className={`pointer-events-none absolute top-0 font-semibold transition-all duration-500 ease-out [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)] ${
+        className={`pointer-events-none absolute top-0 font-semibold whitespace-nowrap transition-all duration-500 ease-out [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)] ${
           open
             ? `left-1/2 -translate-x-1/2 translate-y-[-58%] text-base ${error ? "text-danger" : "text-[color-mix(in_srgb,var(--color-accent)_85%,black)]"}`
             : `left-[10%] -translate-y-1/2 text-lg ${error ? "text-danger" : "text-text-secondary"}`

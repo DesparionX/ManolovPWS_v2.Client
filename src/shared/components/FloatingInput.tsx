@@ -43,7 +43,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
               border). */}
           <label
             htmlFor={id}
-            className={`pointer-events-none absolute top-0 left-[10%] -translate-y-1/2 text-lg font-semibold transition-all duration-500 ease-out [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)] peer-focus:left-1/2 peer-focus:-translate-x-1/2 peer-focus:translate-y-[-58%] peer-focus:text-base ${
+            className={`pointer-events-none absolute top-0 left-[10%] -translate-y-1/2 text-lg font-semibold whitespace-nowrap transition-all duration-500 ease-out [text-shadow:0_0_1px_rgba(0,0,0,1),0_0_2px_rgba(0,0,0,1),0_0_3px_rgba(0,0,0,1),0_0_4px_rgba(0,0,0,1),0_0_6px_rgba(0,0,0,0.95),0_0_9px_rgba(0,0,0,0.85)] peer-focus:left-1/2 peer-focus:-translate-x-1/2 peer-focus:translate-y-[-58%] peer-focus:text-base ${
               hasError
                 ? "text-danger peer-focus:text-danger"
                 : "text-text-secondary peer-focus:text-[color-mix(in_srgb,var(--color-accent)_85%,black)]"

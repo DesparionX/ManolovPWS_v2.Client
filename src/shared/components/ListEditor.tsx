@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Pencil, Trash2, Plus, Check, X } from "lucide-react";
 import { Button } from "./Button";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { useLongPressReveal, LONG_PRESS_ROW_ATTR } from "../hooks/useLongPressReveal";
 
 interface ListEditorProps<T> {
   items: T[];
@@ -25,6 +26,7 @@ export function ListEditor<T>({
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [draft, setDraft] = useState<T | null>(null);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const { revealedId, onTouchStart, onTouchEnd, consumeLongPress } = useLongPressReveal();
 
   function startEdit(index: number) {
     setEditingIndex(index);
@@ -89,22 +91,50 @@ export function ListEditor<T>({
             {editingIndex === index ? (
               editForm
             ) : (
-              <div className="group flex items-center justify-between gap-3 py-3">
+              <div
+                {...{ [LONG_PRESS_ROW_ATTR]: String(index) }}
+                onClick={() => {
+                  if (consumeLongPress()) return;
+                  startEdit(index);
+                }}
+                onTouchStart={() => onTouchStart(String(index))}
+                onTouchEnd={onTouchEnd}
+                onTouchMove={onTouchEnd}
+                className="group flex cursor-pointer items-center justify-between gap-3 py-3 select-none"
+              >
                 <div className="min-w-0 flex-1">{renderRow(item)}</div>
-                <div className="flex shrink-0 gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div
+                  className={`flex shrink-0 gap-1 transition-opacity duration-300 group-hover:opacity-100 ${
+                    revealedId === String(index) ? "opacity-100" : "opacity-0"
+                  }`}
+                >
                   <button
                     type="button"
                     aria-label="Edit"
-                    onClick={() => startEdit(index)}
-                    className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-accent"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startEdit(index);
+                    }}
+                    className={`rounded-lg p-2 transition-colors duration-300 ${
+                      revealedId === String(index)
+                        ? "text-accent"
+                        : "text-text-secondary hover:text-accent"
+                    }`}
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
                     aria-label="Delete"
-                    onClick={() => setDeleteIndex(index)}
-                    className="rounded-lg p-2 text-text-secondary transition-colors duration-300 hover:text-danger"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteIndex(index);
+                    }}
+                    className={`rounded-lg p-2 transition-colors duration-300 ${
+                      revealedId === String(index)
+                        ? "text-danger"
+                        : "text-text-secondary hover:text-danger"
+                    }`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

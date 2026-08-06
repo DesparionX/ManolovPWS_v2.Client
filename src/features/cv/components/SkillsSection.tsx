@@ -27,15 +27,40 @@ function formatCategory(category: string): string {
     .join(" / ");
 }
 
-function SkillGroup({ groups }: { groups: ReturnType<typeof groupByCategory> }) {
+function CategoryGroup({
+  category,
+  items,
+  expanded,
+  onToggle,
+}: {
+  category: string;
+  items: SkillDto[];
+  expanded: boolean;
+  onToggle: () => void;
+}) {
   return (
-    <div className="space-y-5">
-      {groups.map(({ category, items }) => (
-        <div key={category}>
-          <p className="mb-1.5 text-sm font-semibold text-text-secondary">
-            {formatCategory(category)}
-          </p>
-          <div className="flex flex-wrap justify-center gap-1.5">
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        className="mx-auto flex items-center gap-1.5 text-sm font-semibold text-text-secondary transition-colors duration-300 hover:text-accent"
+      >
+        {formatCategory(category)}
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-accent transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+        />
+      </button>
+      {/* Same grid-template-rows (0fr <-> 1fr) height-animation technique
+          CVTabs uses for its own expand/collapse — animates smoothly without
+          needing the content's height up front. */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-wrap justify-center gap-1.5 pt-1.5">
             {items.map((skill) => (
               <span
                 key={skill.name}
@@ -46,15 +71,34 @@ function SkillGroup({ groups }: { groups: ReturnType<typeof groupByCategory> }) 
             ))}
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 }
 
 export function SkillsSection({ skills }: { skills: SkillDto[] }) {
-  const [showSoft, setShowSoft] = useState(false);
   const tech = groupByCategory(skills.filter((s) => s.type === "Tech"));
   const soft = groupByCategory(skills.filter((s) => s.type === "Soft"));
+
+  // Tech categories first, then Soft — same order as before, but now every
+  // category (Soft included) renders as its own row instead of the whole
+  // Soft group being hidden behind a single reveal button. Prefixed keys
+  // since a Tech and a Soft category could share the same category text.
+  const groups = [
+    ...tech.map((g) => ({ ...g, key: `tech-${g.category}` })),
+    ...soft.map((g) => ({ ...g, key: `soft-${g.category}` })),
+  ];
+
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+
+  function toggle(key: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
 
   if (skills.length === 0) return null;
 
@@ -63,25 +107,17 @@ export function SkillsSection({ skills }: { skills: SkillDto[] }) {
       <h2 className="mb-2 text-sm font-semibold tracking-wide text-accent uppercase">
         Skills
       </h2>
-      {tech.length > 0 && <SkillGroup groups={tech} />}
-
-      {soft.length > 0 && (
-        <>
-          {showSoft && <div className="mt-3">
-            <SkillGroup groups={soft} />
-          </div>}
-          <button
-            type="button"
-            onClick={() => setShowSoft((s) => !s)}
-            aria-label={showSoft ? "Hide soft skills" : "Show soft skills"}
-            className="mx-auto mt-3 flex h-8 w-8 items-center justify-center rounded-full border border-border-default text-text-secondary transition-colors duration-300 hover:border-accent hover:text-accent"
-          >
-            <ChevronDown
-              className={`h-4 w-4 transition-transform duration-300 ${showSoft ? "rotate-180" : ""}`}
-            />
-          </button>
-        </>
-      )}
+      <div className="space-y-3">
+        {groups.map((group) => (
+          <CategoryGroup
+            key={group.key}
+            category={group.category}
+            items={group.items}
+            expanded={expanded.has(group.key)}
+            onToggle={() => toggle(group.key)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

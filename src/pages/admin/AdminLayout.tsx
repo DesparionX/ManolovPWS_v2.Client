@@ -35,7 +35,7 @@ export function AdminLayout() {
     <Container className="flex flex-1 flex-col">
       <div className="my-8 flex flex-1 flex-col gap-6 rounded-xl border border-border-default bg-bg-surface/60 p-6 shadow-xl backdrop-blur-md md:flex-row md:gap-0">
         <nav
-          className={`relative flex shrink-0 gap-2 overflow-x-auto border-b border-border-default pb-4 transition-all duration-300 md:flex-col md:overflow-visible md:border-r md:border-b-0 md:pr-6 md:pb-0 ${
+          className={`relative flex shrink-0 justify-center gap-2 overflow-x-auto border-b border-border-default pb-4 transition-all duration-300 md:flex-col md:justify-start md:overflow-visible md:border-r md:border-b-0 md:pr-6 md:pb-0 ${
             collapsed ? "md:w-16" : "md:w-48"
           }`}
         >
@@ -60,7 +60,9 @@ export function AdminLayout() {
                 key={link.to}
                 to={link.to}
                 title={link.label}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-300 ${
+                className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-all ${
+                  active ? "gap-2 duration-300" : "gap-0 duration-0"
+                } md:gap-2 md:duration-300 ${
                   active
                     ? "bg-accent/15 text-accent"
                     : "text-text-secondary hover:text-text-primary"
@@ -74,7 +76,23 @@ export function AdminLayout() {
                     </span>
                   )}
                 </span>
-                <span className={collapsed ? "md:hidden" : ""}>
+                {/* Mobile: icon-only by default, label expands into view
+                    only for the active tab. Only the expand animates
+                    (duration-300, growing max-width — a pure left-to-right
+                    wipe out from behind the icon, no opacity fade mixed in,
+                    so it reads as one directional motion rather than two);
+                    switching away from a tab collapses it instantly
+                    (duration-0) rather than visibly shrinking it back down —
+                    only the newly active tab's expand should be seen
+                    animating, not the outgoing tab's collapse. Desktop
+                    (md+): unaffected by `active` — governed solely by the
+                    existing `collapsed` toggle, always animated, same as
+                    before. */}
+                <span
+                  className={`overflow-hidden whitespace-nowrap transition-[max-width] ${
+                    active ? "max-w-32 duration-300" : "max-w-0 duration-0"
+                  } ${collapsed ? "md:max-w-0 md:duration-300" : "md:max-w-none md:duration-300"}`}
+                >
                   {link.label}
                 </span>
               </Link>

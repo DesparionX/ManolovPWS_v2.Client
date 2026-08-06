@@ -43,19 +43,20 @@ function HexBadge({
       onClick={onClick}
       className="group relative flex h-12 w-14 shrink-0 items-center justify-center"
     >
-      <svg viewBox="0 0 56 48" className="absolute inset-0 h-full w-full">
+      <svg
+        viewBox="0 0 56 48"
+        className="absolute inset-0 h-full w-full overflow-visible"
+      >
         <polygon
           points={HEX_POINTS}
           strokeWidth="1.5"
-          className={`stroke-border-default transition-colors duration-300 ${
-            active ? "fill-accent/15" : "fill-bg-surface group-hover:fill-accent/15"
-          }`}
+          className="fill-bg-surface stroke-border-default transition-colors duration-300 group-hover:fill-accent/15"
         />
         <polygon
           points={HEX_POINTS}
           fill="none"
-          strokeWidth="1.5"
-          className="hex-trace stroke-accent"
+          strokeWidth={active ? "2.5" : "1.5"}
+          className={active ? "hex-frame-glow stroke-accent" : "hex-trace stroke-accent"}
         />
       </svg>
       <Icon

@@ -9,6 +9,7 @@ import { ProjectsPage } from '../pages/ProjectsPage'
 import { ProjectDetailPage } from '../pages/ProjectDetailPage'
 import { CVPage } from '../pages/CVPage'
 import { ContactPage } from '../pages/ContactPage'
+import { NotFoundPage } from '../pages/NotFoundPage'
 import { AdminLayout } from '../pages/admin/AdminLayout'
 import { ProfilePage } from '../pages/admin/ProfilePage'
 import { PostsPage as AdminPostsPage } from '../pages/admin/PostsPage'
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
               },
             ],
           },
+          { path: '*', element: <NotFoundPage /> },
         ],
       },
     ],

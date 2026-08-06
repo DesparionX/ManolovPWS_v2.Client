@@ -39,6 +39,17 @@ body {
      inputs. Force the normal arrow by default; restore the text cursor only
      for elements that are actually editable, below. */
   cursor: default;
+  /* Guards against any stray element (an absolutely-positioned tooltip, an
+     unbroken long word in user-submitted text, etc.) pushing the document
+     wider than the viewport. Found via the Message Detail page's Device
+     tooltip and message body — both were untrusted-length text with no
+     upstream clipping, and on mobile a page with real horizontal overflow
+     doesn't just scroll sideways: it also confuses the browser's vertical
+     rubber-band/overscroll bounds, letting you scroll down past the actual
+     footer into blank space. Both concrete sources are now individually
+     fixed (word-wrapping, max-widths), but this stays as a backstop so a
+     future one doesn't silently reopen the same page-wide break. */
+  overflow-x: hidden;
 }
 
 input,
@@ -257,13 +268,22 @@ input:autofill:focus {
 /* CV page tab icons — hexagon badges drawn as SVG polygons (not CSS
    clip-path), each connected to the next by its own line segment (see
    pages/CV.md). SVG lets the border be a real stroke: a constant dark-gray
-   outline plus a second, brighter dashed stroke animated along the same
-   path via stroke-dashoffset — a thin highlight traveling *along the
-   outline*, not a filled conic-gradient sweep (which read as a radar scan
-   rather than a border glow when tried against a clipped shape). */
+   outline plus a second, brighter stroke animated along the same path via
+   stroke-dashoffset — a highlight traveling *along the outline*, not a
+   filled conic-gradient sweep (which read as a radar scan rather than a
+   border glow when tried against a clipped shape). Same glow-and-color
+   treatment as the Contact page's Mail icon (.mail-trace below): a soft
+   drop-shadow blur riding the stroke, half-loop dasharray, 7s loop —
+   originally only the focused hexagon had this (the rest used a thinner,
+   glow-less, faster version), unified onto every hexagon per Owner
+   feedback once the focused one's version was approved. Reuses this same
+   keyframe for the focused hexagon's own full-frame-glow variant below
+   (both animate against the hexagon's ~162-unit perimeter, confirmed via
+   HEX_POINTS in CVTabs.tsx). */
 .hex-trace {
-  stroke-dasharray: 24 138;
-  animation: hex-trace-dash 5s linear infinite;
+  stroke-dasharray: 81 81;
+  filter: drop-shadow(0 0 3px var(--color-accent));
+  animation: hex-trace-dash 7s linear infinite;
 }
 
 @keyframes hex-trace-dash {
@@ -276,6 +296,18 @@ input:autofill:focus {
   .hex-trace {
     animation: none;
   }
+}
+
+/* Focused/active hexagon tab only — the entire outline glows continuously
+   instead of a partial highlight traveling along it: same color/glow as
+   .hex-trace (accent stroke, the same drop-shadow blur), but no
+   stroke-dasharray gap at all, so the whole frame is lit rather than a
+   segment of it — "the whole frame with the worm's own effect and color,"
+   per Owner feedback, once a plain thicker/glowing worm on just the
+   focused hexagon read as not enough of a distinction from the others.
+   Static (no keyframe) since there's no gap left to animate around. */
+.hex-frame-glow {
+  filter: drop-shadow(0 0 3px var(--color-accent));
 }
 
 /* Contact page icon — same SVG stroke-dash "flowing border" technique as
