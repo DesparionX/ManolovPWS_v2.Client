@@ -23,6 +23,8 @@ Standalone view of a single post, reached via the Home feed's "View post" button
 - Full `context` HTML rendered directly (`dangerouslySetInnerHTML`) — unlike the feed card's stripped-to-text preview, this is the full post, not a preview, so the original TipTap formatting (headings, lists) should render as authored. Since `context` is only ever authored by the Owner (single-user app, no third-party input), this doesn't carry the usual dangerouslySetInnerHTML/XSS risk of untrusted content.
 - Gallery images (if any) rendered as a simple responsive image grid below the content — no lightbox/carousel for now, out of scope unless asked.
 - Thumb (if present) shown as a wide banner image (`h-72 object-cover`) above the title, wider than the feed card's thumb since this is the full-page view.
+- "Back to posts" button: circular, sits on the card's left border (`-translate-x-1/2`, solid `bg-bg-surface`), same technique as Project Detail's own back button (see `pages/project-detail.md` for the full positioning breakdown, since both pages share the exact same pattern/bug history).
+  - **Mobile-only real bug, fixed: the button was clipped along its left edge.** The `-translate-x-1/2` bleed assumes a comfortable margin outside the `max-w-2xl` column — true on desktop, but on mobile the column fills `Container`'s full width, pushing the button ~2px past the viewport edge, hard-clipped by `body { overflow-x: hidden }` (`index.css`) into a visibly flat-edged circle. Fixed the same way as Project Detail: `left-1` (no bleed) below `md`, `md:left-0 md:-translate-x-1/2` (the original bleed) at `md` and up.
 
 ## Edge Cases
 

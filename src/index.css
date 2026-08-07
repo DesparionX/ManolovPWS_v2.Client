@@ -310,6 +310,49 @@ input:autofill:focus {
   filter: drop-shadow(0 0 3px var(--color-accent));
 }
 
+/* Public Projects page — category panel border. Ported from the CV
+   hexagons' glow technique above (.hex-trace) rather than reusing
+   .state-glow's conic-gradient/mask approach, per explicit request: a
+   crisp traveling highlight + soft drop-shadow, not a diffuse blurred
+   comet — same effect, but still each state's own color (--glow-color,
+   the same custom property .state-glow uses, set inline per category).
+   Applied to an SVG <rect> instead of a fixed-size polygon, since a
+   category panel's size is responsive/dynamic (unlike the hexagon badges'
+   fixed h-12 w-14) — `pathLength={100}` on the rect (ProjectsPage.tsx)
+   normalizes stroke-dasharray/dashoffset math to a 0-100 scale regardless
+   of the rect's actual rendered size, so this same dasharray/keyframe work
+   correctly no matter how wide/tall the panel ends up being.
+   Short dash (15/85, was 50/50 — "quite a bit shorter", a comet not a
+   half-loop) and a bigger drop-shadow blast radius. Traced on a rect a few
+   px LARGER than the panel's own visible border (see ProjectsPage.tsx) —
+   an earlier version instead reused the panel border's exact path with a
+   narrower covering stroke painted on top (the Contact page's Mail icon/
+   .mail-trace technique: mostly hidden behind the cover, only a sliver +
+   blur visible) — reversed per Owner feedback: the glow must only ever be
+   visible from *outside* the frame, never hidden behind/under it, so it
+   now traces its own separate, outward-offset path instead of sharing the
+   border's. Thinner too (strokeWidth 4 → 2 in ProjectsPage.tsx, alongside
+   this reversal). */
+.category-trace {
+  stroke: var(--glow-color);
+  stroke-dasharray: 15 85;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--glow-color));
+  animation: category-trace-dash 7s linear infinite;
+}
+
+@keyframes category-trace-dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-trace {
+    animation: none;
+  }
+}
+
 /* Contact page icon — same SVG stroke-dash "flowing border" technique as
    the hexagon badges above, traced along the exact same rect *and stroke
    width* as lucide's own Mail glyph (x:2 y:4 w:20 h:16 rx:2 in its 24x24

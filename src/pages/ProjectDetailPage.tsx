@@ -13,10 +13,18 @@ export function ProjectDetailPage() {
   return (
     <Container>
       <div className="relative mx-auto max-w-2xl py-10">
+        {/* left-1 md:left-0 md:-translate-x-1/2: on desktop this column
+            (max-w-2xl) sits well short of Container's own edges, so the
+            half-outside-the-border bleed lands comfortably in that margin.
+            On mobile the column fills Container's full available width, so
+            that same bleed pushed the button ~2px past the actual viewport
+            edge — invisible before body got `overflow-x: hidden` (see
+            index.css), hard-clipped (a visibly flat-edged circle) since.
+            Mobile keeps the button fully on-screen instead of bleeding. */}
         <Link
           to="/projects"
           aria-label="Back to projects"
-          className={`absolute left-0 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent ${
+          className={`absolute left-1 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:left-0 md:-translate-x-1/2 ${
             project ? "top-69" : "top-16"
           }`}
         >

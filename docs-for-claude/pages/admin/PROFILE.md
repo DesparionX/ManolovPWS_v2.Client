@@ -53,6 +53,7 @@ Top of the page: **Main**, **Education**, **Experience**, **Certificates**, **La
 Education, Experience, Certificates, Languages, Skills, and Contacts all use the same interaction pattern, just with different visible columns and expand-form fields (see table below):
 
 1. **Default view:** compact table-like list, one row per item, showing only the 1-2 key summary fields (not all data)
+   - **Education, Experience, and Certificates display most-recent-first**, not in whatever order they happen to sit in the underlying array — `sortByDateDesc` (`shared/utils/sortByDateDesc.ts`, shared with the CV page's own identical need, see `pages/cv.md`) sorts a *display* copy by `startDate` (Education/Experience) or `dateObtained` (Certificates) each render, computed fresh from the `items` prop right where it's handed to `ListEditor`. **The underlying array/storage order is untouched** — `ListEditor` tracks items by array *index* for edit/delete targeting (per this doc's Data/API notes above, there's no `id` field), and since every save is a full-array replace anyway, sending that array back in sorted-for-display order is exactly as correct as sending it in whatever order it was in — order was never meaningful to the backend here. Languages/Skills/Contacts are unaffected — no date field, no sorting.
 2. **Hover on a row:** reveals Edit and Delete icon buttons (no other actions). **The whole row is also clickable** (same action as Edit — expands the row in place). Delete's own click calls `stopPropagation()` so tapping it doesn't also trigger the row's expand-to-edit.
    - **Mobile: press-and-hold reveals the same icons, and the reveal stays visible after releasing** (not just while actively touching) — CSS `:active` alone reverts the instant a finger lifts, which doesn't leave enough time to actually reach the now-visible Delete button, so this uses real state instead: `shared/hooks/useLongPressReveal.ts`, shared with Posts/Projects/Inbox's list rows. The row also gets `select-none` so holding it to trigger the reveal doesn't also pop up the native text-selection/copy callout. Once revealed, the icons show their eventual hover colors (accent for Edit, danger for Delete) immediately rather than staying the plain secondary gray — there's no true hover-then-color-preview step on a touchscreen, so waiting for a second interaction to show color doesn't make sense there the way it does on desktop.
    - **Tapping anywhere outside the revealed row dismisses it** — see `admin/posts.md`'s equivalent bullet for the mechanism (`data-long-press-id` + a document-level `pointerdown` listener in `useLongPressReveal.ts`); same behavior here.
@@ -161,6 +162,21 @@ Array-item field validation (Education/Experience/Certificates/Languages/Skills/
 | Network | Yes | Free text, max 30 chars — must match an existing icon filename per `pages/cv.md`'s icon-mapping convention (no dropdown lock-in currently; typo risk accepted knowingly) |
 | Profile Name | Yes | Max 30 chars |
 | Full URL | Yes | Must be a valid URL format |
+
+### Duplicate prevention
+
+Every array tab also blocks saving an item that's an exact duplicate of another item already in the same list (comparing against every *other* item — the one currently being edited is excluded from its own comparison, so re-saving a genuinely-unchanged item isn't mistaken for colliding with itself). Comparison is case/whitespace-insensitive (`sameText` in `ProfileArrayTabs.tsx` — trims and lowercases both sides) for free-text fields, exact for dates. Per-tab duplicate key, matching the Owner's own stated criteria (not just "every field matches"):
+
+| Tab | Duplicate key |
+|---|---|
+| Education | School Name + School Type + Degree + Field of Study |
+| Experience | Position (Title) + Company + Start Date |
+| Certificates | Title |
+| Languages | Language Name |
+| Skills | Name |
+| Contacts | Network + Profile Name |
+
+**Feedback differs from every other validation rule on this page.** Every rule in the tables above fails silently — the Save button just doesn't close the row, with no message, an existing, established pattern this doc doesn't otherwise flag as a gap. A duplicate is different: the item is otherwise fully valid (every field individually correct), so the same silent block would look like the Save button is simply broken, with nothing on screen suggesting why. `ListEditor.tsx`'s `isDuplicate`/`duplicateMessage` props (new, separate from its existing `validate` prop) instead show the global error modal (`notificationController.showError`, the same one API failures use) with a specific message per tab, e.g. "An identical education entry already exists (same school, school type, degree, and field of study)." — deliberately not folded into `validate` itself, since a duplicate is "this collides with a sibling," not "this item's own fields are invalid."
 
 ## Edge Cases
 

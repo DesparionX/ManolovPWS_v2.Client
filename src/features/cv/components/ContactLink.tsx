@@ -28,7 +28,7 @@ export function ContactLink({ contact }: { contact: ContactDto }) {
           onError={() => setIconFailed(true)}
         />
       )}
-      <span className="truncate text-sm">{contact.profileName}</span>
+      <span className="truncate text-sm">{contact.network}</span>
     </a>
   );
 }

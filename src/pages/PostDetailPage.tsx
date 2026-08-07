@@ -18,10 +18,16 @@ export function PostDetailPage() {
   return (
     <Container>
       <div className="relative mx-auto max-w-2xl py-10">
+        {/* left-1 md:left-0 md:-translate-x-1/2 — same fix as
+            ProjectDetailPage's identical back button: on mobile this column
+            fills Container's full width, so the half-outside-the-border
+            bleed pushed the button ~2px past the viewport edge, clipped by
+            body's `overflow-x: hidden` (index.css). Desktop keeps the bleed
+            — the column there sits well inside Container's own margin. */}
         <Link
           to="/"
           aria-label="Back to posts"
-          className={`absolute left-0 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent ${
+          className={`absolute left-1 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:left-0 md:-translate-x-1/2 ${
             post?.thumb ? "top-64" : "top-16"
           }`}
         >

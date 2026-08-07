@@ -3,6 +3,7 @@ import { Pencil, Trash2, Plus, Check, X } from "lucide-react";
 import { Button } from "./Button";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { useLongPressReveal, LONG_PRESS_ROW_ATTR } from "../hooks/useLongPressReveal";
+import { notificationController } from "../notifications/notificationController";
 
 interface ListEditorProps<T> {
   items: T[];
@@ -12,6 +13,16 @@ interface ListEditorProps<T> {
   renderRow: (item: T) => ReactNode;
   renderForm: (item: T, onChange: (item: T) => void) => ReactNode;
   validate: (item: T) => boolean;
+  // Checked against every OTHER item in the list (the one being edited is
+  // excluded) after `validate` passes — kept separate from `validate`
+  // rather than folded into it, since a duplicate isn't "this item's own
+  // fields are invalid," it's "this item collides with a sibling," and it
+  // gets its own explicit error toast (via notificationController) instead
+  // of `validate`'s existing silent block, since a fully-filled-out item
+  // failing to save with zero explanation would be far more confusing here
+  // than for an ordinary empty-required-field case.
+  isDuplicate?: (item: T, otherItems: T[]) => boolean;
+  duplicateMessage?: string;
 }
 
 export function ListEditor<T>({
@@ -22,6 +33,8 @@ export function ListEditor<T>({
   renderRow,
   renderForm,
   validate,
+  isDuplicate,
+  duplicateMessage,
 }: ListEditorProps<T>) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [draft, setDraft] = useState<T | null>(null);
@@ -45,6 +58,13 @@ export function ListEditor<T>({
 
   function confirmSave() {
     if (!draft || editingIndex === null || !validate(draft)) return;
+    const otherItems = items.filter((_, i) => i !== editingIndex);
+    if (isDuplicate?.(draft, otherItems)) {
+      notificationController.showError(
+        duplicateMessage ?? "An identical entry already exists.",
+      );
+      return;
+    }
     const next = [...items];
     next[editingIndex] = draft;
     onSave(next);

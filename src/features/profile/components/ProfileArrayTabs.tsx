@@ -4,6 +4,7 @@ import { DatePicker } from "../../../shared/components/DatePicker";
 import { Select } from "../../../shared/components/Select";
 import { RichTextEditor } from "../../../shared/components/RichTextEditor";
 import { isRichTextEmpty } from "../../../shared/components/richTextUtils";
+import { sortByDateDesc } from "../../../shared/utils/sortByDateDesc";
 import type {
   EducationDto,
   JobDto,
@@ -20,6 +21,13 @@ function normalizeCategory(input: string): string {
     .trim()
     .toLowerCase()
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// Case/whitespace-insensitive equality for duplicate checks below — "Sofia
+// University" and "sofia university " should count as the same school, not
+// slip past a strict `===` just because of casing/incidental whitespace.
+function sameText(a: string, b: string): boolean {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
 }
 
 function notFuture(date: string): boolean {
@@ -68,6 +76,18 @@ function validateEducation(item: EducationDto) {
   );
 }
 
+// Duplicate = same school, school type, degree, and field of study — the
+// Owner's own criteria, not just an arbitrary "everything matches" check.
+function isDuplicateEducation(item: EducationDto, others: EducationDto[]) {
+  return others.some(
+    (o) =>
+      sameText(o.schoolName, item.schoolName) &&
+      sameText(o.schoolType, item.schoolType) &&
+      sameText(o.degree, item.degree) &&
+      sameText(o.fieldOfStudy, item.fieldOfStudy),
+  );
+}
+
 export function EducationTab({
   items,
   isSaving,
@@ -79,11 +99,13 @@ export function EducationTab({
 }) {
   return (
     <ListEditor
-      items={items}
+      items={sortByDateDesc(items, (e) => e.startDate)}
       emptyItem={emptyEducation}
       isSaving={isSaving}
       onSave={onSave}
       validate={validateEducation}
+      isDuplicate={isDuplicateEducation}
+      duplicateMessage="An identical education entry already exists (same school, school type, degree, and field of study)."
       renderRow={(item) => (
         <p className="truncate text-text-primary">
           {item.schoolName || "New entry"}{" "}
@@ -157,6 +179,18 @@ function validateExperience(item: JobDto) {
   );
 }
 
+// Duplicate = same position, company, and start date — dates are already
+// ISO date-only strings (per DatePicker), so a plain `===` is exact without
+// needing a normalize step the way free-text fields do.
+function isDuplicateExperience(item: JobDto, others: JobDto[]) {
+  return others.some(
+    (o) =>
+      sameText(o.title, item.title) &&
+      sameText(o.company, item.company) &&
+      o.startDate === item.startDate,
+  );
+}
+
 export function ExperienceTab({
   items,
   isSaving,
@@ -168,11 +202,13 @@ export function ExperienceTab({
 }) {
   return (
     <ListEditor
-      items={items}
+      items={sortByDateDesc(items, (j) => j.startDate)}
       emptyItem={emptyExperience}
       isSaving={isSaving}
       onSave={onSave}
       validate={validateExperience}
+      isDuplicate={isDuplicateExperience}
+      duplicateMessage="An identical experience entry already exists (same position, company, and start date)."
       renderRow={(item) => (
         <p className="truncate text-text-primary">
           {item.title || "New entry"}{" "}
@@ -249,6 +285,10 @@ function validateCertificate(item: CertificateDto) {
   );
 }
 
+function isDuplicateCertificate(item: CertificateDto, others: CertificateDto[]) {
+  return others.some((o) => sameText(o.title, item.title));
+}
+
 export function CertificatesTab({
   items,
   isSaving,
@@ -260,11 +300,13 @@ export function CertificatesTab({
 }) {
   return (
     <ListEditor
-      items={items}
+      items={sortByDateDesc(items, (c) => c.dateObtained)}
       emptyItem={emptyCertificate}
       isSaving={isSaving}
       onSave={onSave}
       validate={validateCertificate}
+      isDuplicate={isDuplicateCertificate}
+      duplicateMessage="A certificate with this title already exists."
       renderRow={(item) => (
         <p className="truncate text-text-primary">{item.title || "New entry"}</p>
       )}
@@ -324,6 +366,10 @@ function validateLanguage(item: LanguageDto) {
   return Boolean(item.readingLevel && item.writingLevel && item.speakingLevel);
 }
 
+function isDuplicateLanguage(item: LanguageDto, others: LanguageDto[]) {
+  return others.some((o) => sameText(o.languageName, item.languageName));
+}
+
 export function LanguagesTab({
   items,
   isSaving,
@@ -340,6 +386,8 @@ export function LanguagesTab({
       isSaving={isSaving}
       onSave={onSave}
       validate={validateLanguage}
+      isDuplicate={isDuplicateLanguage}
+      duplicateMessage="This language is already in the list."
       renderRow={(item) => (
         <p className="truncate text-text-primary">
           {item.languageName || "New entry"}{" "}
@@ -424,6 +472,10 @@ function validateSkill(item: SkillDto) {
   );
 }
 
+function isDuplicateSkill(item: SkillDto, others: SkillDto[]) {
+  return others.some((o) => sameText(o.name, item.name));
+}
+
 export function SkillsTab({
   items,
   isSaving,
@@ -442,6 +494,8 @@ export function SkillsTab({
         onSave(next.map((s) => ({ ...s, category: normalizeCategory(s.category) })))
       }
       validate={validateSkill}
+      isDuplicate={isDuplicateSkill}
+      duplicateMessage="A skill with this name already exists."
       renderRow={(item) => (
         <p className="truncate text-text-primary">
           {item.name || "New entry"}{" "}
@@ -513,6 +567,15 @@ function validateContact(item: ContactDto) {
   );
 }
 
+// Duplicate = same network AND profile name — the same person can have two
+// different profiles on the same network (e.g. a personal + a work GitHub),
+// so network alone isn't enough to call it a duplicate.
+function isDuplicateContact(item: ContactDto, others: ContactDto[]) {
+  return others.some(
+    (o) => sameText(o.network, item.network) && sameText(o.profileName, item.profileName),
+  );
+}
+
 export function ContactsTab({
   items,
   isSaving,
@@ -529,6 +592,8 @@ export function ContactsTab({
       isSaving={isSaving}
       onSave={onSave}
       validate={validateContact}
+      isDuplicate={isDuplicateContact}
+      duplicateMessage="A contact with this network and profile name already exists."
       renderRow={(item) => (
         <p className="truncate text-text-primary">
           {item.network || "New entry"}{" "}

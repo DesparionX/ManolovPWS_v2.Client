@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { PROJECT_STATE_LABELS, PROJECT_STATE_BADGE_CLASSES } from "../../projects";
+import { sortByDateDesc } from "../../../shared/utils/sortByDateDesc";
 import type { PublicCVReadModel } from "../types/cvTypes";
 
 function formatDateRange(start: string, end: string | null) {
@@ -98,6 +99,13 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
       key: "projects",
       icon: FolderKanban,
       header: "Projects",
+      // Not sorted chronologically like the other three tabs below —
+      // CVProjectReadModel (confirmed against openapi.json) carries no
+      // date field at all to sort by, unlike JobDto/EducationDto/
+      // CertificateDto. Flagged to the Owner; left in whatever order the
+      // backend returns until CVProjectReadModel gets a date (or reuses
+      // the same id ProjectReadModel has, so this could resolve one via
+      // the full /Projects list instead).
       content: (
         <div className="space-y-5">
           {cv.projects.map((project) => (
@@ -112,10 +120,6 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
                   {PROJECT_STATE_LABELS[project.state]}
                 </span>
               </div>
-              <div
-                className="text-sm text-text-secondary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
-                dangerouslySetInnerHTML={{ __html: project.description }}
-              />
               {project.stack.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {project.stack.map((tech) => (
@@ -166,7 +170,7 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
       header: "Employment History",
       content: (
         <div className="space-y-5">
-          {cv.workExperience.map((job) => (
+          {sortByDateDesc(cv.workExperience, (j) => j.startDate).map((job) => (
             <div key={`${job.company}-${job.title}-${job.startDate}`} className="group">
               <p className="font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent">
                 {job.title}
@@ -192,7 +196,7 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
       header: "Education",
       content: (
         <div className="space-y-5">
-          {cv.education.map((edu) => (
+          {sortByDateDesc(cv.education, (e) => e.startDate).map((edu) => (
             <div key={`${edu.schoolName}-${edu.degree}-${edu.startDate}`} className="group">
               <p className="font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent">
                 {edu.degree} · {edu.fieldOfStudy}
@@ -215,7 +219,7 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
       header: "Certificates",
       content: (
         <div className="space-y-5">
-          {cv.certificates.map((cert) => (
+          {sortByDateDesc(cv.certificates, (c) => c.dateObtained).map((cert) => (
             <div key={cert.credentialId}>
               <p className="text-sm">
                 <a
