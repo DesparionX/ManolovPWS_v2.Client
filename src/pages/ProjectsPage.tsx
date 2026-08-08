@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Frown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "../shared/components/Container";
 import {
@@ -59,6 +59,8 @@ function EmptyPlaceholder() {
 export function ProjectsPage() {
   const { data: projects, isLoading, isError } = useProjects();
   const [index, setIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackHeight, setTrackHeight] = useState<number>();
 
   const groups = STATE_ORDER.map((state) => ({
     state,
@@ -70,12 +72,40 @@ export function ProjectsPage() {
   // index could otherwise point past the end of a now-shorter groups array.
   const currentIndex = Math.min(index, Math.max(groups.length - 1, 0));
 
+  // Real bug, fixed: the slides sit side by side in a non-wrapping flex row
+  // (so translateX can page between them), and a flex row's cross size
+  // auto-sizes to its TALLEST child, not the currently visible one — so the
+  // track stayed as tall as the biggest category forever, leaving the
+  // overflow-hidden wrapper's leftover height scrollable into empty space
+  // whenever a shorter category was paged into view. Measuring the active
+  // slide's own height and pinning the track to it explicitly (below) makes
+  // the wrapper's height track whichever category is actually showing.
+  // Needs `items-start` on the track (below) too, not just this observer —
+  // with the default `align-items: stretch`, every slide (including the one
+  // being measured) stretches to fill whatever height is already pinned on
+  // the track, so re-measuring would just echo back the previous height
+  // forever instead of each slide's own natural content height.
+  useEffect(() => {
+    const activeSlide = trackRef.current?.children[currentIndex] as
+      | HTMLElement
+      | undefined;
+    if (!activeSlide) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setTrackHeight(entry.target.getBoundingClientRect().height);
+    });
+    observer.observe(activeSlide);
+    return () => observer.disconnect();
+  }, [currentIndex, groups.length]);
+
   function goPrev() {
     setIndex((i) => (i - 1 + groups.length) % groups.length);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function goNext() {
     setIndex((i) => (i + 1) % groups.length);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -161,8 +191,12 @@ export function ProjectsPage() {
                 above/below to peek into) — only left/right needed to move. */}
             <div className="overflow-hidden py-4">
               <div
-                className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                ref={trackRef}
+                className="flex items-start transition-[transform,height] duration-300 ease-in-out"
+                style={{
+                  transform: `translateX(-${currentIndex * 100}%)`,
+                  height: trackHeight,
+                }}
               >
                 {groups.map((group) => (
                   // px-4 here (not on the shared overflow-hidden wrapper —

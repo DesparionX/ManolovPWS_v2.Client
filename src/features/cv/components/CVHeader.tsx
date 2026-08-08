@@ -6,7 +6,7 @@ export function CVHeader({ cv }: { cv: PublicCVReadModel }) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="rounded-lg bg-linear-to-br from-accent to-accent-dark p-1.5">
+      <div className="rounded-lg bg-linear-to-br from-text-secondary to-border-default p-1.5">
         <div className="h-44 w-36 overflow-hidden rounded-md">
           {cv.profilePictureUrl ? (
             <img

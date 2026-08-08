@@ -3,7 +3,10 @@ import { ChevronDown } from "lucide-react";
 import type { SkillDto } from "../../profile";
 
 function groupByCategory(skills: SkillDto[]) {
-  const categories = [...new Set(skills.map((s) => s.category))].sort();
+  // Not sorted — `Set` preserves first-insertion order, so categories keep
+  // whatever order they first appear in within `skills` (i.e. add order,
+  // same order the admin panel already shows them in), not alphabetical.
+  const categories = [...new Set(skills.map((s) => s.category))];
   return categories.map((category) => ({
     category,
     items: skills.filter((s) => s.category === category),
