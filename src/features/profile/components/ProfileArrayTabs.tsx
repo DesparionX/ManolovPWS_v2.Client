@@ -5,6 +5,7 @@ import { Select } from "../../../shared/components/Select";
 import { RichTextEditor } from "../../../shared/components/RichTextEditor";
 import { isRichTextEmpty } from "../../../shared/components/richTextUtils";
 import { sortByDateDesc } from "../../../shared/utils/sortByDateDesc";
+import { NETWORK_OPTIONS } from "../../../shared/utils/networkIcons";
 import type {
   EducationDto,
   JobDto,
@@ -602,11 +603,22 @@ export function ContactsTab({
       )}
       renderForm={(item, onChange) => (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FloatingInput
+          {/* Dropdown (curated list), not free text — structurally
+              eliminates the typo risk the old free-text field only
+              "accepted knowingly" (per pages/admin/PROFILE.md's Network
+              Options table, also the source of truth for the CV page's
+              icon lookup, shared/utils/networkIcons.ts). Same placeholder-
+              as-first-option convention the CEFR level Selects below
+              already use. */}
+          <Select
             id="network"
-            label="Network"
             value={item.network}
-            onChange={(e) => onChange({ ...item, network: e.target.value })}
+            onChange={(v) => onChange({ ...item, network: v })}
+            options={[
+              { value: "", label: "Network" },
+              ...NETWORK_OPTIONS.map((n) => ({ value: n, label: n })),
+            ]}
+            className="rounded-lg px-3 py-2 pr-9"
           />
           <FloatingInput
             id="profileName"

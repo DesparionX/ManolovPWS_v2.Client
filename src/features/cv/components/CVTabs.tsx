@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import {
   UserRound,
@@ -6,6 +7,7 @@ import {
   Briefcase,
   GraduationCap,
   Award,
+  Eye,
   GitFork,
   Globe,
   type LucideIcon,
@@ -100,16 +102,14 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
       icon: FolderKanban,
       header: "Projects",
       // Not sorted chronologically like the other three tabs below —
-      // CVProjectReadModel (confirmed against openapi.json) carries no
-      // date field at all to sort by, unlike JobDto/EducationDto/
-      // CertificateDto. Flagged to the Owner; left in whatever order the
-      // backend returns until CVProjectReadModel gets a date (or reuses
-      // the same id ProjectReadModel has, so this could resolve one via
-      // the full /Projects list instead).
+      // CVProjectReadModel (confirmed against openapi.json) still carries
+      // no date field, unlike JobDto/EducationDto/CertificateDto. It does
+      // now have `id` (added on request — see the View Project link
+      // below), but id alone isn't a date to sort by.
       content: (
         <div className="space-y-5">
           {cv.projects.map((project) => (
-            <div key={project.name} className="group">
+            <div key={project.id} className="group">
               <div className="mb-1 flex flex-wrap items-center gap-2">
                 <p className="font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent">
                   {project.name}
@@ -132,30 +132,37 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
                   ))}
                 </div>
               )}
-              {(project.gitHubUrl || project.liveUrl) && (
-                <div className="mt-2 flex flex-wrap gap-3">
-                  {project.gitHubUrl && (
-                    <a
-                      href={project.gitHubUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-1.5 text-sm text-text-primary transition-colors duration-300 hover:text-accent"
-                    >
-                      <GitFork className="h-3.5 w-3.5" /> GitHub
-                    </a>
-                  )}
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-1.5 text-sm text-text-primary transition-colors duration-300 hover:text-accent"
-                    >
-                      <Globe className="h-3.5 w-3.5" /> Live Preview
-                    </a>
-                  )}
-                </div>
-              )}
+              {/* Unconditional row now (was gated on gitHubUrl/liveUrl
+                  being present) — View Project only needs `id`, which
+                  every project always has, unlike the other two links. */}
+              <div className="mt-2 flex flex-wrap gap-3">
+                <Link
+                  to={`/projects/${project.id}`}
+                  className="flex items-center gap-1.5 text-sm text-text-primary transition-colors duration-300 hover:text-accent"
+                >
+                  <Eye className="h-3.5 w-3.5" /> View Project
+                </Link>
+                {project.gitHubUrl && (
+                  <a
+                    href={project.gitHubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1.5 text-sm text-text-primary transition-colors duration-300 hover:text-accent"
+                  >
+                    <GitFork className="h-3.5 w-3.5" /> GitHub
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1.5 text-sm text-text-primary transition-colors duration-300 hover:text-accent"
+                  >
+                    <Globe className="h-3.5 w-3.5" /> Live Preview
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>

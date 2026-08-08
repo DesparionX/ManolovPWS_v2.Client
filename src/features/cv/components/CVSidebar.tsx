@@ -34,7 +34,12 @@ export function CVSidebar({ cv }: { cv: PublicCVReadModel }) {
           <h2 className="mb-2 text-sm font-semibold tracking-wide text-accent uppercase">
             Contacts
           </h2>
-          <div className="flex flex-col items-center gap-2">
+          {/* Single row of icon-only links (was a vertical column of
+              icon+label rows) — per Owner feedback, the label is gone
+              (ContactLink.tsx carries the network name via title/aria-label
+              now instead), so a row reads better for a handful of compact
+              icons than a column did for icon+text rows. */}
+          <div className="flex items-center justify-center gap-4">
             {cv.contacts.map((contact) => (
               <ContactLink key={contact.network + contact.profileName} contact={contact} />
             ))}

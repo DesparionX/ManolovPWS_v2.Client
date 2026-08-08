@@ -1,34 +1,27 @@
-import { useState } from "react";
-import { Link as LinkIcon } from "lucide-react";
 import type { ContactDto } from "../../profile";
+import { NETWORK_ICONS, FALLBACK_NETWORK_ICON } from "../../../shared/utils/networkIcons";
 
-// Per-network icons aren't in the repo yet (no assets/icons/networks/ folder,
-// and lucide-react's installed version has no brand/network icons at all) —
-// falls back to a generic link icon via onError. Once real
-// `public/icons/networks/{network}.png` files are added, they'll just start
-// rendering automatically, no code change needed.
+// Icon resolved via the shared react-icons lookup (networkIcons.ts) keyed
+// off contact.network — supersedes the earlier public/icons/networks/
+// {network}.png + onError approach (see pages/CV.md's Contacts section for
+// that history). These are SVG components that inherit currentColor, so
+// they pick up this link's own accent hover treatment automatically.
+// Icon-only now (network name label removed per Owner feedback) — title/
+// aria-label carry the network name for hover/screen-reader discoverability
+// instead, since nothing else here names it visually anymore.
 export function ContactLink({ contact }: { contact: ContactDto }) {
-  const [iconFailed, setIconFailed] = useState(false);
-  const iconSrc = `/icons/networks/${contact.network.toLowerCase()}.png`;
+  const Icon = NETWORK_ICONS[contact.network] ?? FALLBACK_NETWORK_ICON;
 
   return (
     <a
       href={contact.fullUrl}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center gap-2 text-text-primary transition-colors duration-300 hover:text-accent"
+      title={contact.network}
+      aria-label={`${contact.network}: ${contact.profileName}`}
+      className="text-text-primary transition-colors duration-300 hover:text-accent"
     >
-      {iconFailed ? (
-        <LinkIcon className="h-4 w-4 shrink-0 text-text-secondary" />
-      ) : (
-        <img
-          src={iconSrc}
-          alt=""
-          className="h-4 w-4 shrink-0 object-contain"
-          onError={() => setIconFailed(true)}
-        />
-      )}
-      <span className="truncate text-sm">{contact.network}</span>
+      <Icon className="h-6 w-6" />
     </a>
   );
 }

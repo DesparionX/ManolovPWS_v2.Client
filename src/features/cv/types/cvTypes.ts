@@ -14,6 +14,7 @@ export interface PublicAddress {
 }
 
 export interface CVProjectReadModel {
+  id: string;
   name: string;
   description: string;
   state: ProjectState;

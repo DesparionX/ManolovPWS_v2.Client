@@ -19,8 +19,15 @@ const STATE_ORDER: ProjectState[] = [
 // Same circular, half-stuck-to-the-edge button ProjectDetailPage's own back
 // button uses (neutral gray, not accent-colored by default) — explicitly
 // requested to match that one, not CVPage's own accent-colored pager arrows.
+// Mobile-only: `fixed` (not `absolute`) and vertically centered against the
+// VIEWPORT rather than the panel — per Owner feedback, the arrows should
+// stay put on screen while the page scrolls, not travel with the panel.
+// `top-1/2 -translate-y-1/2` resolves against whichever containing block
+// `position` puts it in, so the same classes give "centered on the panel"
+// on desktop (absolute) and "centered on the screen" on mobile (fixed) for
+// free — only `position` itself needs to differ between the two.
 const ARROW_BUTTON_CLASS =
-  "absolute top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent";
+  "fixed md:absolute top-1/2 z-30 md:z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent";
 
 function SkeletonCard() {
   return (
@@ -93,23 +100,32 @@ export function ProjectsPage() {
         {!isLoading && !isError && groups.length > 0 && (
           <div className="relative">
             {/* Arrows are siblings of the overflow-hidden track below, not
-                descendants of it — inside it, their own half-outside-the-
-                edge positioning would get clipped by the same
-                overflow-hidden that's there to hide the other, off-screen
-                category slides (the exact bug already hit and fixed once
-                on CVPage's own mobile pager — see pages/CV.md). Positioned
-                against this same `relative` wrapper the panel itself spans
-                edge-to-edge (no horizontal margin on the panel — see below),
-                so `left-0`/`right-0` line up exactly with the panel's own
-                border, not a few px outside it. Only shown when there's
-                actually more than one category to page through. */}
+                descendants of it — inside it, their own positioning would
+                get clipped by the same overflow-hidden that's there to hide
+                the other, off-screen category slides (the exact bug already
+                hit and fixed once on CVPage's own mobile pager — see
+                pages/CV.md). Desktop (`md:absolute`): positioned against
+                this same `relative` wrapper, half-outside the panel's own
+                edge (`md:-translate-x-1/2`/`md:translate-x-1/2`) — the
+                panel spans edge-to-edge with no horizontal margin of its
+                own (see below), so `left-4`/`right-4` line up exactly with
+                its actual border. Mobile (`fixed`, no translate): per Owner
+                feedback, pinned to the viewport instead so they stay put on
+                screen while the page scrolls, not travelling with the
+                panel — no half-outside-a-border bleed there either, since
+                there's no border for a viewport-fixed button to straddle,
+                and that same bleed math would otherwise push the button a
+                couple px past the actual screen edge (the exact clipping
+                bug already hit once on the Post/Project detail pages' back
+                buttons — see pages/PROJECT-DETAIL.md). Only shown when
+                there's actually more than one category to page through. */}
             {groups.length > 1 && (
               <>
                 <button
                   type="button"
                   onClick={goPrev}
                   aria-label="Previous category"
-                  className={`${ARROW_BUTTON_CLASS} left-4 -translate-x-1/2`}
+                  className={`${ARROW_BUTTON_CLASS} left-4 md:-translate-x-1/2`}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -117,7 +133,7 @@ export function ProjectsPage() {
                   type="button"
                   onClick={goNext}
                   aria-label="Next category"
-                  className={`${ARROW_BUTTON_CLASS} right-4 translate-x-1/2`}
+                  className={`${ARROW_BUTTON_CLASS} right-4 md:translate-x-1/2`}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -227,7 +243,12 @@ export function ProjectsPage() {
                             behind/under it. Thinner than that previous pass
                             too (strokeWidth 4 → 2). rx bumped 12 → 14 to
                             stay roughly concentric with the border it's
-                            now offset from. */}
+                            now offset from.
+                            max-md:hidden — mobile-only, moved back onto
+                            each individual ProjectCard instead (see
+                            ProjectCard.tsx), per Owner feedback. Desktop is
+                            unaffected, keeps this frame-level glow exactly
+                            as before. */}
                         <rect
                           x="-3"
                           y="-3"
@@ -238,7 +259,7 @@ export function ProjectsPage() {
                           fill="none"
                           strokeWidth="2"
                           pathLength={100}
-                          className="category-trace"
+                          className="category-trace max-md:hidden"
                         />
                       </svg>
                       {/* Thicker/darker text-shadow (stacked, near-black,
