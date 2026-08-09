@@ -18,18 +18,32 @@ export function PostDetailPage() {
   return (
     <Container>
       <div className="relative mx-auto max-w-2xl py-10">
-        {/* left-1 md:left-0 md:-translate-x-1/2 — same fix as
-            ProjectDetailPage's identical back button: on mobile this column
-            fills Container's full width, so the half-outside-the-border
-            bleed pushed the button ~2px past the viewport edge, clipped by
-            body's `overflow-x: hidden` (index.css). Desktop keeps the bleed
-            — the column there sits well inside Container's own margin. */}
+        {/* Desktop (md:absolute md:top-16 md:left-0 md:-translate-x-1/2):
+            same "sits on the card's left border" convention as
+            ProjectDetailPage's identical button — this column sits well
+            inside Container's own margin there, so the half-outside bleed
+            lands in real empty space, clear of the header's pin badge no
+            matter the title length. Used to be top-64 (vertically centered
+            on the old fixed h-72 thumb) when a thumb was present — no
+            longer a known constant now that the thumb's height is flexible
+            (see the <img> below), so it sits at the header row instead,
+            same spot the no-thumb case already used.
+            Mobile (`fixed top-1/2 -translate-y-1/2 left-4`, no bleed):
+            `fixed` because an `absolute` button at the header row landed
+            right on top of the pin badge on mobile (no bleed margin to
+            escape into on a full-width column) — see PROJECT-DETAIL.md for
+            that bug's full history. Vertically centered on the viewport
+            per Owner feedback, reversed from an earlier `top-24` (fixed
+            just below the sticky site header) — same centering technique
+            `pages/PROJECTS.md`'s pager arrows use (`top-1/2
+            -translate-y-1/2` against a `fixed` ancestor centers on the
+            viewport). `md:translate-y-0` cancels that translate back out
+            at desktop, where `top-16` is already the real intended
+            position, not something to center around. */}
         <Link
           to="/"
           aria-label="Back to posts"
-          className={`absolute left-1 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:left-0 md:-translate-x-1/2 ${
-            post?.thumb ? "top-64" : "top-16"
-          }`}
+          className="fixed top-1/2 left-4 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:absolute md:top-16 md:left-0 md:translate-y-0 md:-translate-x-1/2"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
@@ -68,17 +82,28 @@ export function PostDetailPage() {
               </button>
             </div>
 
-            {post.thumb && (
-              <img
-                src={post.thumb}
-                alt=""
-                className="h-72 w-full object-cover"
-              />
-            )}
+            {/* No fixed height / object-fit anymore, same reversal as the
+                Home feed card (PostCard.tsx) — a fixed h-72 box with
+                object-cover was cropping real image content, per Owner
+                feedback. w-full with height left to `auto` (Tailwind
+                Preflight's default for <img>) sizes off the image's own
+                intrinsic aspect ratio instead — always flush edge-to-edge
+                with the card, whole thumb visible, nothing cropped. */}
+            {post.thumb && <img src={post.thumb} alt="" className="w-full" />}
 
             <div className="p-6">
+              {/* [&_p:empty]:min-h-lh — TipTap saves a manually-typed blank
+                  line as a literal empty <p></p> node (confirmed against
+                  @tiptap/extension-paragraph's own renderHTML — no <br>
+                  filler, just an empty tag). An empty, non-replaced block
+                  element generates no line box at all, so with Preflight's
+                  `p { margin: 0 }` it rendered with zero height — the blank
+                  line the Owner typed was silently swallowed on read, not
+                  trimmed by the backend or dropped by the editor on save.
+                  Giving empty <p>s a min-height of one line makes them
+                  render as the blank line they actually are. */}
               <div
-                className="text-text-primary [&_h2]:text-xl [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+                className="text-text-primary [&_h2]:text-xl [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p:empty]:min-h-lh"
                 dangerouslySetInnerHTML={{ __html: post.context }}
               />
 

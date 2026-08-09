@@ -185,8 +185,13 @@ export function CVTabs({ cv }: { cv: PublicCVReadModel }) {
               <p className="text-sm text-text-secondary">
                 {job.company} · {formatDateRange(job.startDate, job.endDate)}
               </p>
+              {/* [&_p:empty]:min-h-lh — see pages/PostDetailPage.tsx for
+                  why: an empty <p></p> (how TipTap saves a manually-typed
+                  blank line) generates no line box under Preflight's `p {
+                  margin: 0 }`, so it silently collapsed to zero height on
+                  read. */}
               <div
-                className="mt-1 text-sm text-text-secondary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+                className="mt-1 text-sm text-text-secondary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p:empty]:min-h-lh"
                 dangerouslySetInnerHTML={{ __html: job.description }}
               />
             </div>

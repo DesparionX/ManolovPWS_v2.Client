@@ -13,19 +13,30 @@ export function ProjectDetailPage() {
   return (
     <Container>
       <div className="relative mx-auto max-w-2xl py-10">
-        {/* left-1 md:left-0 md:-translate-x-1/2: on desktop this column
-            (max-w-2xl) sits well short of Container's own edges, so the
-            half-outside-the-border bleed lands comfortably in that margin.
-            On mobile the column fills Container's full available width, so
-            that same bleed pushed the button ~2px past the actual viewport
-            edge — invisible before body got `overflow-x: hidden` (see
-            index.css), hard-clipped (a visibly flat-edged circle) since.
-            Mobile keeps the button fully on-screen instead of bleeding. */}
+        {/* Desktop (md:absolute, md:left-0 md:-translate-x-1/2, md:top-69/
+            md:top-16): unchanged from before — this column (max-w-2xl) sits
+            well short of Container's own edges, so the half-outside-the-
+            border bleed lands comfortably in that margin, vertically
+            positioned at half the thumb's height when a project is loaded
+            (`top-69`, thumb is still a fixed h-72 here — unlike Post
+            Detail's, this thumb wasn't changed) or the header row
+            otherwise (`top-16`).
+            Mobile (`fixed top-1/2 -translate-y-1/2 left-4`, no bleed): same
+            reversal as Post Detail's identical button (see
+            `pages/POST-DETAIL.md`), applied here for consistency per Owner
+            feedback — `fixed` because the old `absolute left-1` bled zero
+            distance on a full-width mobile column (no margin to escape
+            into), and centering on the viewport reads better than either
+            the old thumb-overlay position or an intermediate below-header
+            one. Same centering technique `pages/PROJECTS.md`'s pager
+            arrows use. `md:translate-y-0` cancels the centering translate
+            back out at desktop, where `top-69`/`top-16` are real positions,
+            not something to center around. */}
         <Link
           to="/projects"
           aria-label="Back to projects"
-          className={`absolute left-1 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:left-0 md:-translate-x-1/2 ${
-            project ? "top-69" : "top-16"
+          className={`fixed top-1/2 left-4 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border-default bg-bg-surface text-text-secondary shadow-sm transition-colors duration-300 hover:border-accent hover:text-accent md:absolute md:left-0 md:translate-y-0 md:-translate-x-1/2 ${
+            project ? "md:top-69" : "md:top-16"
           }`}
         >
           <ArrowLeft className="h-4 w-4" />
@@ -74,8 +85,12 @@ export function ProjectDetailPage() {
                 </div>
               )}
 
+              {/* [&_p:empty]:min-h-lh — see PostDetailPage.tsx for why: an
+                  empty <p></p> (how TipTap saves a manually-typed blank
+                  line) generates no line box under Preflight's `p { margin:
+                  0 }`, so it silently collapsed to zero height on read. */}
               <div
-                className="text-text-primary [&_h2]:text-xl [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+                className="text-text-primary [&_h2]:text-xl [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p:empty]:min-h-lh"
                 dangerouslySetInnerHTML={{ __html: project.description }}
               />
 
